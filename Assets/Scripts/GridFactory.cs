@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class GridFactory : MonoBehaviour
 {
@@ -9,39 +10,67 @@ public class GridFactory : MonoBehaviour
     [SerializeField] int width = 5;
     [SerializeField] int depth = 5;
 
-    [SerializeField] float elementOffset;
- 
+
+    [Range(1f, 2f)]
+    [SerializeField] float spread = 1f;
+
+    private List<Vector3> gridPoints;
+    private readonly List<GameObject> spawnedHexagons = new List<GameObject>();
+
+
     void Start()
     {
+        hexagonHelperInstance.InitHelper();
         GenerateGrid();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
     }
 
     void GenerateGrid()
     {
-        Vector3 origin = transform.position;
-        int x = 0, z = 0;
+        gridPoints = ComputeGridPoints().ToList();
 
-        for(x = 0; x < width; x++)
+        if (spawnedHexagons.Count < gridPoints.Count)
         {
-            GameObject hexagon  = hexagonHelperInstance.SpawnHexagon();
-            
-            Debug.LogFormat("w: {0}, d: {1}", (float)hexagonHelperInstance.hexagonWidth, (float)hexagonHelperInstance.hexagonDepth);
-            Debug.LogFormat("x: {0}, z: {1}", x, z);
-            hexagon.transform.position = new Vector3(origin.x + (float)hexagonHelperInstance.hexagonWidth * x, 0, origin.z + (float)hexagonHelperInstance.hexagonDepth * x);
+            SpawnHexagons();
+        }
+
+        foreach (Vector3 pos in gridPoints)
+        {
+            int index = gridPoints.IndexOf(pos);
+            spawnedHexagons[index].transform.position = pos;
+        }
+    }
+
+    void SpawnHexagons()
+    {
+        for (int i = 0; i < gridPoints.Count; i++)
+        {
+            GameObject hexagon = hexagonHelperInstance.SpawnHexagon();
+            hexagon.name = "HexagonPlate no. " + i + 1;
             hexagon.transform.SetParent(transform);
-            for (z = 0; z < depth; z++)
+            spawnedHexagons.Add(hexagon);
+        }
+    }
+
+
+    IEnumerable<Vector3> ComputeGridPoints()
+    {
+        Vector3 origin = transform.position;
+        for (int x = 0; x < width; x++)
+        {
+            for (int z = 0; z < depth; z++)
             {
-                GameObject hexagon2  = hexagonHelperInstance.SpawnHexagon();
-                hexagon2.transform.position = new Vector3(origin.x + (float)hexagonHelperInstance.hexagonWidth * x, 0, origin.z + (float)hexagonHelperInstance.hexagonDepth * x);
-                hexagon2.transform.SetParent(transform);
+                var pos = new Vector3(
+                    origin.x + (float)hexagonHelperInstance.hexagonWidth * (x * spread) + ((z % 2 == 0) ? ((float)hexagonHelperInstance.hexagonWidth / 2) + (spread - 1) : 0),
+                    0,
+                    origin.z + (float)hexagonHelperInstance.hexagonDepth * (z * spread));
+
+                yield return pos;
             }
-            
         }
     }
 }
