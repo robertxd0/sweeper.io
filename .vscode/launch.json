@@ -51,12 +51,6 @@
                   "request": "launch"
             },
             {
-                  "name": "Unity Editor",
-                  "type": "unity",
-                  "path": "/D:/Unity Projects/sweeper.io/Library/EditorInstance.json",
-                  "request": "launch"
-            },
-            {
                   "name": "Windows Player",
                   "type": "unity",
                   "request": "launch"

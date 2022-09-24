@@ -5,24 +5,30 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Create hexagon helper instance", fileName = "HexagonHelperInstance")]
 public class HexagonHelper : ScriptableObject
 {
-   public GameObject hexagonPrefab = null;
-   
-   internal float? hexagonWidth;
+    public GameObject hexagonPrefab = null;
 
-   internal float? hexagonDepth;
+    internal float? hexagonWidth;
 
-   public GameObject SpawnHexagon()
-   {
-      var hexagonInstance = Instantiate(hexagonPrefab);
+    internal float? hexagonDepth;
 
-      if(hexagonWidth == null || hexagonDepth == null)
-      {
-         BoxCollider hexagonCollider = hexagonInstance.GetComponent<BoxCollider>();
+    public void InitHelper()
+    {
+        if (hexagonWidth == null || hexagonDepth == null)
+        {
+            var tempInstance = Instantiate(hexagonPrefab);
+            MeshRenderer hexagonMeshRenderer = tempInstance.GetComponent<MeshRenderer>();
 
-         hexagonWidth = hexagonCollider.bounds.size.x;
-         hexagonDepth = hexagonCollider.bounds.size.y;
-      }
+            hexagonWidth = hexagonMeshRenderer.bounds.size.x;
+            hexagonDepth = hexagonMeshRenderer.bounds.size.z;
 
-      return Instantiate(hexagonInstance);
-   }
+            DestroyImmediate(tempInstance);
+        }
+    }
+
+    public GameObject SpawnHexagon()
+    {
+        var hexagonInstance = Instantiate(hexagonPrefab);
+
+        return hexagonInstance;
+    }
 }
