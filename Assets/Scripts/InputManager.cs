@@ -67,7 +67,7 @@ public class InputManager : MonoBehaviour
 
                   if (!controller.isGrounded)
                   {
-                        controller.Move(Physics.gravity);
+                        controller.Move(Physics.gravity * Time.deltaTime);
                   }
             }
       }
