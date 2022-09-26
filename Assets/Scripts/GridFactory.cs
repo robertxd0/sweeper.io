@@ -6,6 +6,7 @@ using System.Linq;
 public class GridFactory : MonoBehaviour
 {
       [SerializeField] HexagonHelper hexagonHelperInstance;
+      [SerializeField] HexagonZoneManager hexagonZoneManager;
 
       [SerializeField] int width = 5;
       [SerializeField] int depth = 5;
@@ -14,20 +15,43 @@ public class GridFactory : MonoBehaviour
       [Range(1f, 2f)]
       [SerializeField] float spread = 1f;
 
+      private static GridFactory instance;
+
+      internal readonly List<HexagonPlate> spawnedHexagons = new List<HexagonPlate>();
+
       private List<Vector3> gridPoints;
-      private readonly List<GameObject> spawnedHexagons = new List<GameObject>();
+
+      public static GridFactory GetInstance()
+      {
+            return instance;
+      }
+
+      private void OnEnable()
+      {
+            instance = this;
+      }
+      private void OnDisable()
+      {
+            instance = null;
+      }
+      private void OnDestroy()
+      {
+            instance = null;
+      }
 
 
       void Start()
       {
             hexagonHelperInstance.InitHelper();
+            hexagonZoneManager = GetComponent<HexagonZoneManager>();
+
             GenerateGrid();
       }
 
       // Update is called once per frame
       void Update()
       {
-        // GenerateGrid();
+            // GenerateGrid();
       }
 
       void GenerateGrid()
@@ -39,11 +63,21 @@ public class GridFactory : MonoBehaviour
                   SpawnHexagons();
             }
 
+            List<HexagonPlate> plates = new List<HexagonPlate>();
+
             foreach (Vector3 pos in gridPoints)
             {
                   int index = gridPoints.IndexOf(pos);
                   spawnedHexagons[index].transform.position = pos;
+
+                  if(spawnedHexagons[index].isTriggered)
+                  {
+                        plates.Add(spawnedHexagons[index]);
+                  }
             }
+
+            hexagonZoneManager.UpdateZone(plates.ToArray(), 0);
+
       }
 
       void SpawnHexagons()
@@ -51,9 +85,10 @@ public class GridFactory : MonoBehaviour
             for (int i = 0; i < gridPoints.Count; i++)
             {
                   GameObject hexagon = hexagonHelperInstance.SpawnHexagon();
-                  hexagon.name = "HexagonPlate no. " + i + 1;
+                  hexagon.name = "HexagonPlate no. " + i;
                   hexagon.transform.SetParent(transform);
-                  spawnedHexagons.Add(hexagon);
+                  HexagonPlate plate = hexagon.GetComponent<HexagonPlate>();
+                  spawnedHexagons.Add(plate);
             }
       }
 
@@ -68,7 +103,7 @@ public class GridFactory : MonoBehaviour
                         var pos = new Vector3(
                             origin.x + (float)hexagonHelperInstance.hexagonWidth * (x * spread) + ((z % 2 == 0) ? ((float)hexagonHelperInstance.hexagonWidth / 2f) + (spread - 1f) : 0),
                             0,
-                            origin.z + (float)hexagonHelperInstance.hexagonDepth * (z * spread) - (z* (float)hexagonHelperInstance.hexagonWidth / 1.5f  + (spread - 1f)));
+                            origin.z + (float)hexagonHelperInstance.hexagonDepth * (z * spread) - (z * (float)hexagonHelperInstance.hexagonWidth / 1.5f + (spread - 1f)));
 
                         yield return pos;
                   }
