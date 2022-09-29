@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class HexagonZoneManager : MonoBehaviour
 {
-    [SerializeField] int[] directionMappingArray;
+    [SerializeField] public int[] directionMappingArray; //this should not be public 
 
     private Dictionary<int, List<HexagonPlate>> zones;
 
@@ -45,17 +45,19 @@ private void Awake() {
         foreach (HexagonPlate plate in hexagonPlates)
         {
             index = factory.spawnedHexagons.IndexOf(plate);
-        
+            if(index == 0)
+                continue;
+
             foreach(int directionValue in directionMappingArray)
             {
-                
-                if (directionValue < 0 || directionValue > factory.spawnedHexagons.Count) continue;
+                int actualValue = index + directionValue;
+                if (actualValue < 0 || actualValue > factory.spawnedHexagons.Count) continue;
 
-                var nHexagon = factory.spawnedHexagons[directionValue];
-                if(nHexagon != null && !nHexagon.isTriggered)
+                var nHexagon = factory.spawnedHexagons[actualValue];
+                if(!nHexagon.isTriggered)
                 {
                     plate.setTriggerable();
-                }   
+                }
             }
 
             

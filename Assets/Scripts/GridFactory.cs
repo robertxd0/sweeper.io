@@ -21,6 +21,8 @@ public class GridFactory : MonoBehaviour
 
       private List<Vector3> gridPoints;
 
+      private Coroutine hexagonZoneCoroutine; // move to hexagonzonemanager when done testing
+      private List<HexagonPlate> recentlyAddedPlates; // move to hexagonzonemanager when done testing
       public static GridFactory GetInstance()
       {
             return instance;
@@ -48,10 +50,50 @@ public class GridFactory : MonoBehaviour
             GenerateGrid();
       }
 
-      // Update is called once per frame
-      void Update()
+      public void PlateTriggered(HexagonPlate plate) //this should be managed by the hexaonzonemanager
       {
-            // GenerateGrid();
+            int strength = plate.plateStrength; //strength = no. of plates to activate
+            int[] directionArray = hexagonZoneManager.directionMappingArray;
+            List<HexagonPlate> foundPlates = new List<HexagonPlate>();
+            int index = spawnedHexagons.IndexOf(plate); //maybe it would be a good idea to split the spawned hexagons into two arrays(enabled, disabled)
+            int tryCount = 20;
+            while(foundPlates.Count() < strength)
+            {
+                  foreach(int factor in directionArray)
+                  {
+                        int realIndex = index - factor;
+                        if(realIndex < 0 || realIndex > spawnedHexagons.Count) continue;
+
+                        var hexagon = spawnedHexagons[realIndex];
+
+                        if(!hexagon.isTriggered)
+                        {
+                              hexagon.gameObject.SetActive(true);
+                              hexagon.isTriggered = true;
+                              foundPlates.Add(hexagon);
+                              AddPlate(hexagon);
+                        }
+                  }
+                  tryCount++;
+                  if(tryCount > 20 ) break;
+            }
+
+      }
+
+      public void AddPlate(HexagonPlate plate)  // move to hexagonzonemanager when done testing  
+      {
+            if(hexagonZoneCoroutine != null)
+            {
+                  StopCoroutine(hexagonZoneCoroutine);
+            }
+            if(recentlyAddedPlates == null)
+            {
+                  recentlyAddedPlates = new List<HexagonPlate>();
+            }
+            if(!recentlyAddedPlates.Contains(plate))
+                  recentlyAddedPlates.Add(plate);
+            
+            hexagonZoneCoroutine = StartCoroutine(MarkHexagonZoneWithDelay(recentlyAddedPlates.ToArray()));
       }
 
       void GenerateGrid()
@@ -76,9 +118,15 @@ public class GridFactory : MonoBehaviour
                   }
             }
 
-            hexagonZoneManager.UpdateZone(plates.ToArray(), 0);
-
       }
+
+      IEnumerator MarkHexagonZoneWithDelay(HexagonPlate[] plates) ///move this to the hexagon zone manager
+      {
+            yield return new WaitForSeconds(0.5f);
+            hexagonZoneManager.UpdateZone(plates, 0);
+      }
+
+
 
       void SpawnHexagons()
       {
