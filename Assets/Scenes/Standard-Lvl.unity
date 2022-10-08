@@ -446,8 +446,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hexagonHelperInstance: {fileID: 11400000, guid: e2ac1ea6b336b4e408c4de9936b09ef7, type: 2}
   hexagonZoneManager: {fileID: 0}
-  width: 100
-  depth: 100
+  width: 20
+  depth: 20
   spread: 1.225
 --- !u!4 &1031781283
 Transform:
@@ -1710,10 +1710,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.77909964
-  m_Height: 4.01
+  m_Radius: 0.5
+  m_Height: 2.0157242
   m_Direction: 1
-  m_Center: {x: 0.00037050573, y: 0.12607276, z: -0.048376285}
+  m_Center: {x: 0.00037050247, y: 0.03859231, z: -0.048376262}
 --- !u!54 &7464798932899414186
 Rigidbody:
   m_ObjectHideFlags: 0

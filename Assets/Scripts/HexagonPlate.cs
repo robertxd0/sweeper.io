@@ -6,20 +6,31 @@ public class HexagonPlate : MonoBehaviour
 {
     [SerializeField] Material triggerablePlateLook;
 
+    private Material standardPlateLook;
+
     internal bool isTriggered;
 
     internal int plateStrength;
+
+     [InspectorButton("TriggerTest")]
+    public bool Trigger;
+
+    private void TriggerTest()
+    {
+        this.plateStrength = Random.Range(1, 10);
+        this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
+        HexagonZoneManager.instance.PlateTriggered(this);
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (isTriggered)
         {
             if (other.tag == Constants.TAG_PLAYER)
-            {   //capsulate this into a function
+            {   //enscapsulate this into a function
                 this.plateStrength = Random.Range(1, 5);
-                //this.isTriggered = true;
-                //this.gameObject.SetActive(true); 
-                GridFactory.GetInstance().PlateTriggered(this); // the zonemanager should handle this, not grid factory
+                this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
+                HexagonZoneManager.instance.PlateTriggered(this);
             }
         }
     }
@@ -29,8 +40,17 @@ public class HexagonPlate : MonoBehaviour
         this.GetComponent<MeshRenderer>().material = triggerablePlateLook;
     }
 
+    public void setState(bool triggerReady)
+    {
+        MeshRenderer renderer = this.GetComponent<MeshRenderer>();
+        if(triggerReady) renderer.material = this.triggerablePlateLook;
+        else renderer.material = this.standardPlateLook;
+            
+    }
+
     void Start()
     {
+        this.standardPlateLook = this.GetComponent<MeshRenderer>().material;
         this.isTriggered = false;
         InitPlateState();
     }
@@ -46,7 +66,7 @@ public class HexagonPlate : MonoBehaviour
             {
                 plateState = true;
                 this.isTriggered = true;
-                GridFactory.GetInstance().AddPlate(this); // the zonemanager should handle this, nod grid factory
+                HexagonZoneManager.instance.AddPlate(this);
             }
         }
         this.gameObject.SetActive(plateState);
