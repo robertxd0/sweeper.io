@@ -5,6 +5,7 @@ using UnityEngine;
 public class HexagonPlate : MonoBehaviour
 {
     [SerializeField] Material triggerablePlateLook;
+    [SerializeField] Material untriggeredPlateLook;
 
     private Material standardPlateLook;
 
@@ -58,18 +59,22 @@ public class HexagonPlate : MonoBehaviour
     void InitPlateState()
     {
         //check wether player is near this tile
-        bool plateState = false;
+        //bool plateState = false;
         Collider[] overlappingColliders = Physics.OverlapSphere(transform.position, 15f);
         foreach (Collider col in overlappingColliders)
         {
             if (col.tag == Constants.TAG_PLAYER)
             {
-                plateState = true;
+                //plateState = true;
                 this.isTriggered = true;
                 HexagonZoneManager.instance.AddPlate(this);
             }
         }
-        this.gameObject.SetActive(plateState);
+        if(!this.isTriggered)
+        {
+            this.GetComponent<MeshRenderer>().material = this.untriggeredPlateLook;
+        }
+        //this.gameObject.SetActive(plateState);
     }
 
 

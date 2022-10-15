@@ -111,3 +111,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerablePlateLook: {fileID: 2100000, guid: 53f8d98028b49854a96d45a7d4f70250, type: 2}
+  untriggeredPlateLook: {fileID: 2100000, guid: 4b38912f9bd065543b2ced29654a1fa1, type: 2}
+  Trigger: 0

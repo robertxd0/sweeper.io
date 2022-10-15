@@ -81,7 +81,10 @@ public class HexagonZoneManager : MonoBehaviour
 
     public void ReloadZone(int playerID)
     {
-        UpdateZone(zones[0].ToArray(), 0);
+        if(zones != null && zones.ContainsKey(0))
+        {
+                UpdateZone(zones[0].ToArray(), 0);
+        }
     }
 
     public void AddPlate(HexagonPlate plate)  // move to hexagonzonemanager when done testing  
