@@ -5,48 +5,82 @@ using UnityEngine;
 public class HexagonPlate : MonoBehaviour
 {
     [SerializeField] Material triggerablePlateLook;
-    [SerializeField] Material untriggeredPlateLook;
+    [SerializeField] Material untriggeredPlateLook; 
 
     private Material standardPlateLook;
 
     internal bool isTriggered;
+    
+    internal bool triggerable = false;
 
-    internal int plateStrength;
 
-     [InspectorButton("TriggerTest")]
+    [InspectorButton("TriggerTest")]
     public bool Trigger;
 
     private void TriggerTest()
     {
-        this.plateStrength = Random.Range(1, 10);
-        this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
-        HexagonZoneManager.instance.PlateTriggered(this);
+       TriggerPlate();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (isTriggered)
+        if (triggerable && isTriggered)
         {
             if (other.tag == Constants.TAG_PLAYER)
-            {   //enscapsulate this into a function
-                this.plateStrength = Random.Range(1, 5);
-                this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
-                HexagonZoneManager.instance.PlateTriggered(this);
+            {  
+                TriggerPlate();
             }
         }
     }
 
-    public void setTriggerable()
+    public void SetTriggerable()
     {
+        this.triggerable = true;
+        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
         this.GetComponent<MeshRenderer>().material = triggerablePlateLook;
     }
 
-    public void setState(bool triggerReady)
+    public void SetUnTriggerable()
+    {
+        this.triggerable = false;
+        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
+        this.GetComponent<MeshRenderer>().material =  standardPlateLook;
+    }
+
+    public void SetState(bool triggerReady)
     {
         MeshRenderer renderer = this.GetComponent<MeshRenderer>();
         if(triggerReady) renderer.material = this.triggerablePlateLook;
         else renderer.material = this.standardPlateLook;
-            
+    }
+
+    private void TriggerPlate()
+    {
+        this.isTriggered = true;
+        this.triggerable = false;
+        this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
+
+        // float plateStrength = Random.Range(2f, 6f);
+        float plateStrength = 3f;
+
+        int layer = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
+        Collider[] adjacentPlatesCol = Physics.OverlapSphere(transform.position, plateStrength, layer);
+
+        HexagonPlate[] adjacentPlatesObj = new HexagonPlate[adjacentPlatesCol.Length];
+
+        int index = 0;
+        foreach(Collider col in adjacentPlatesCol)
+        {
+            adjacentPlatesObj[index] = col.GetComponent<HexagonPlate>();
+            adjacentPlatesObj[index].isTriggered = true;
+            adjacentPlatesCol[index].gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
+            index++;
+        }
+        
+        if(adjacentPlatesCol.Length > 0 && adjacentPlatesObj.Length == adjacentPlatesCol.Length)
+        {
+            HexagonZoneManager.instance.AddHexagonsForPlayer(adjacentPlatesObj, 0);
+        }
     }
 
     void Start()
@@ -60,19 +94,21 @@ public class HexagonPlate : MonoBehaviour
     {
         //check wether player is near this tile
         //bool plateState = false;
-        Collider[] overlappingColliders = Physics.OverlapSphere(transform.position, 15f);
+        Collider[] overlappingColliders = Physics.OverlapSphere(transform.position, 15f); // add layer mask
         foreach (Collider col in overlappingColliders)
         {
             if (col.tag == Constants.TAG_PLAYER)
             {
                 //plateState = true;
                 this.isTriggered = true;
-                HexagonZoneManager.instance.AddPlate(this);
+                HexagonPlate[] plate = new HexagonPlate[1] {this};
+                HexagonZoneManager.instance.AddHexagonsForPlayer(plate, 0);
             }
         }
         if(!this.isTriggered)
         {
             this.GetComponent<MeshRenderer>().material = this.untriggeredPlateLook;
+            this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
         }
         //this.gameObject.SetActive(plateState);
     }

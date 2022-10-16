@@ -25,239 +25,63 @@ public class HexagonZoneManager : MonoBehaviour
         factory = GetComponent<GridFactory>();
     }
 
-    public void PlateTriggered(HexagonPlate plate) //this should be managed by the hexaonzonemanager
+
+    IEnumerator MarkHexagonZoneWithDelay(int playerId) ///move this to the hexagon zone manager
     {
-        //------------------------OLD LOGIC-----------------------------------------
-        // int strength = plate.plateStrength; //strength = no. of plates to activate
-        // var spawnedPlates = factory.GetSpawnedPlates();
-        // List<HexagonPlate> foundPlates = new List<HexagonPlate>();
-        // int index = spawnedPlates.IndexOf(plate); //maybe it would be a good idea to split the spawned hexagons into two arrays(enabled, disabled)
-        // int tryCount = 20;
-        // while (foundPlates.Count < strength)
-        // {
-        //     foreach (int factor in directionArray)
-        //     {
-        //         int realIndex = index - factor;
-        //         if (realIndex < 0 || realIndex > spawnedPlates.Count - 1) continue;
-
-        //         var hexagon = spawnedPlates[realIndex];
-
-        //         if (!hexagon.isTriggered && !hexagon.isActiveAndEnabled)
-        //         {
-        //             hexagon.gameObject.SetActive(true);
-        //             hexagon.isTriggered = true;
-        //             foundPlates.Add(hexagon);
-        //             AddPlate(hexagon);
-        //         }
-        //     }
-        //     tryCount++;
-        //     if (tryCount > 20) break;
-        // }
-
-        //------------------------OLD LOGIC END--------------------------------------
-        var currentPlate = plate;
-        int strength = plate.plateStrength;
-        var spawnedPlates = factory.GetSpawnedPlates();
-        int tryCount = 0;
-        while (tryCount < strength)
-        {
-
-            int nextIndex;
-            CheckBorderHexagon(currentPlate, out nextIndex);
-            if (nextIndex != -1)
-            {
-                currentPlate = spawnedPlates[nextIndex];
-
-                currentPlate.gameObject.SetActive(true);
-                currentPlate.isTriggered = true;
-                zones[0].Add(currentPlate);
-                //AddPlate(currentPlate);
-            }
-            tryCount++;
-            if (tryCount > 5) break;
-        }
-        ReloadZone(0); // use the id here
-    }
-
-    public void ReloadZone(int playerID)
-    {
-        if(zones != null && zones.ContainsKey(0))
-        {
-                UpdateZone(zones[0].ToArray(), 0);
-        }
-    }
-
-    public void AddPlate(HexagonPlate plate)  // move to hexagonzonemanager when done testing  
-    {
-        if (hexagonZoneCoroutine != null)
-        {
-            StopCoroutine(hexagonZoneCoroutine);
-        }
-        if (recentlyAddedPlates == null)
-        {
-            recentlyAddedPlates = new List<HexagonPlate>();
-        }
-        if (!recentlyAddedPlates.Contains(plate))
-            recentlyAddedPlates.Add(plate);
-
-        hexagonZoneCoroutine = StartCoroutine(MarkHexagonZoneWithDelay(recentlyAddedPlates.ToArray()));
-    }
-
-    IEnumerator MarkHexagonZoneWithDelay(HexagonPlate[] plates) ///move this to the hexagon zone manager
-    {
-        yield return new WaitForSeconds(0.5f);
-        this.UpdateZone(plates, 0);
+        yield return new WaitForSeconds(0.05f);
+        this.UpdateZone(playerId);
     }
 
     public void AddHexagonsForPlayer(HexagonPlate[] hexagonPlates, int playerId)
     {
-        if (zones.ContainsKey(playerId))
-        {
-            zones[playerId].AddRange(hexagonPlates);
-            return;
-        }
-        else
+        if (!zones.ContainsKey(playerId))
         {
             List<HexagonPlate> hexagons = new List<HexagonPlate>();
             hexagons.AddRange(hexagonPlates);
-            zones.Add(playerId, hexagons);
+            zones.Add(playerId, hexagons);     
+        }
+        else
+            zones[playerId].AddRange(hexagonPlates);
+        
+
+        if (hexagonZoneCoroutine != null)
+        {
+            StopCoroutine(hexagonZoneCoroutine);
         }
 
-        this.UpdateZone(hexagonPlates, playerId);
+        hexagonZoneCoroutine = StartCoroutine(MarkHexagonZoneWithDelay(playerId));
     }
 
-    public void UpdateZone(HexagonPlate[] hexagonPlates, int playerId)
+    public void UpdateZone(int playerId)
     {
         if (!zones.ContainsKey(playerId))
         {
-            List<HexagonPlate> plates = new List<HexagonPlate>();
-            plates.AddRange(hexagonPlates);
-            zones.Add(playerId, plates);
-        }else
-            zones[playerId].AddRange(hexagonPlates);
+          return;
+        }
 
-        foreach (HexagonPlate plate in hexagonPlates)
+        foreach (HexagonPlate plate in zones[playerId])
         {
             if (CheckBorderHexagon(plate))
             {
-                plate.setTriggerable();
+                plate.SetTriggerable();
+            }
+            else
+            {
+                plate.SetUnTriggerable();
             }
         }
     }
 
 
-    public bool CheckBorderHexagon(HexagonPlate plate)
+    bool CheckBorderHexagon(HexagonPlate plate)
     {
-        return CheckBorderHexagon(plate, out _);
-    }
+        int layerMask = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
 
-
-    //Determines wether the hexagon lays at the border of the zone and marks it as such
-    bool CheckBorderHexagon(HexagonPlate plate, out int nextPlateIndex)
-    {
-        var spawnedPlates = factory.GetSpawnedPlates();
-        int index = spawnedPlates.IndexOf(plate);
-
-
-        if (index % factory.depth != 0 && index % factory.width != 0)
-        {
-            int targetIndex = -1;
-            var hexagon = spawnedPlates[index];
-
-            //left (n-depth)
-            targetIndex = index - factory.depth;
-
-            if (targetIndex > 0 && targetIndex < spawnedPlates.Count)
-            {
-                var adjacentHexagon = spawnedPlates[targetIndex];
-
-                if (!adjacentHexagon.isTriggered && !adjacentHexagon.gameObject.activeInHierarchy)
-                {
-                    nextPlateIndex = targetIndex;
-                    return true;
-                }
-            }
-
-            //right (n+depth)
-            targetIndex = index + factory.depth;
-
-            if (targetIndex > 0 && targetIndex < spawnedPlates.Count)
-            {
-                var adjacentHexagon = spawnedPlates[targetIndex];
-
-                if (!adjacentHexagon.isTriggered && !adjacentHexagon.gameObject.activeInHierarchy)
-                {
-                    nextPlateIndex = targetIndex;
-                    return true;
-                }
-            }
-
-            //upper left (n-(depth-1))
-            targetIndex = index - (factory.depth - 1);
-
-            if (targetIndex > 0 && targetIndex < spawnedPlates.Count)
-            {
-                var adjacentHexagon = spawnedPlates[targetIndex];
-
-                if (!adjacentHexagon.isTriggered && !adjacentHexagon.gameObject.activeInHierarchy)
-                {
-                    nextPlateIndex = targetIndex;
-                    return true;
-                }
-
-            }
-
-            //upper right (n+1)
-            targetIndex = index + 1;
-
-            if (targetIndex > 0 && targetIndex < spawnedPlates.Count)
-            {
-                var adjacentHexagon = spawnedPlates[targetIndex];
-
-                if (!adjacentHexagon.isTriggered && !adjacentHexagon.gameObject.activeInHierarchy)
-                {
-                    nextPlateIndex = targetIndex;
-                    return true;
-                }
-
-            }
-
-            //lower left (n-(depth+1))
-            targetIndex = index - (factory.depth + 1);
-
-            if (targetIndex > 0 && targetIndex < spawnedPlates.Count)
-            {
-                var adjacentHexagon = spawnedPlates[targetIndex];
-
-                if (!adjacentHexagon.isTriggered && !adjacentHexagon.gameObject.activeInHierarchy)
-                {
-                    nextPlateIndex = targetIndex;
-                    return true;
-                }
-
-            }
-
-            //lower right (n-1)
-            targetIndex = index - 1;
-
-            if (targetIndex > 0 && targetIndex < spawnedPlates.Count)
-            {
-                var adjacentHexagon = spawnedPlates[targetIndex];
-
-                if (!adjacentHexagon.isTriggered && !adjacentHexagon.gameObject.activeInHierarchy)
-                {
-                    nextPlateIndex = targetIndex;
-                    return true;
-                }
-
-            }
-
+        if(Physics.OverlapSphere(plate.transform.position, 1.5f, layerMask).Length > 0){
+            return true;
         }
 
-        //no adjacent untriggered hexagon
-        nextPlateIndex = -1;
         return false;
-
     }
 
 }
