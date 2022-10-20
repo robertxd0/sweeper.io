@@ -28,7 +28,7 @@ public class HexagonZoneManager : MonoBehaviour
 
     IEnumerator MarkHexagonZoneWithDelay(int playerId) ///move this to the hexagon zone manager
     {
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(0.25f);
         this.UpdateZone(playerId);
     }
 
@@ -71,7 +71,6 @@ public class HexagonZoneManager : MonoBehaviour
             }
         }
     }
-
 
     bool CheckBorderHexagon(HexagonPlate plate)
     {

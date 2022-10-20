@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class HexagonPlate : MonoBehaviour
 {
+    public static PlateTriggeredEvent PlateTriggeredEvent;
+
     [SerializeField] Material triggerablePlateLook;
     [SerializeField] Material untriggeredPlateLook; 
 
@@ -81,6 +84,8 @@ public class HexagonPlate : MonoBehaviour
         {
             HexagonZoneManager.instance.AddHexagonsForPlayer(adjacentPlatesObj, 0);
         }
+
+        PlateTriggeredEvent.Invoke(this);
     }
 
     void Start()
@@ -112,6 +117,9 @@ public class HexagonPlate : MonoBehaviour
         }
         //this.gameObject.SetActive(plateState);
     }
+}
 
-
+[System.Serializable]
+public class PlateTriggeredEvent : UnityEvent<HexagonPlate>
+{
 }
