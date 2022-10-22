@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fffe7609762de34985d564f9bda7154, type: 3}
   m_Name: BombHelperInstance
   m_EditorClassIdentifier: 
-  bombPrefab: {fileID: 0}
+  bombPrefab: {fileID: 748783862783216132, guid: 924e46fcff795a843bb3ba4cb1bec938, type: 3}

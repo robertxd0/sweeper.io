@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BombFactory : MonoBehaviour
 {
+    [SerializeField] BombHelper bombHelper;
 
     private void OnEnable() {
         HexagonPlate.PlateTriggeredEvent.AddListener(PlateTriggered);
@@ -20,7 +21,11 @@ public class BombFactory : MonoBehaviour
 
     void PlateTriggered(HexagonPlate plate)
     {
-        Debug.Log("Factory recorded trigger: " + plate.gameObject.name);
+        var bomb = bombHelper.SpawnBomb();
+        var pos = plate.transform.position;
+        pos.y += 1f;
+
+        bomb.transform.position = pos;
     }
 
 }
