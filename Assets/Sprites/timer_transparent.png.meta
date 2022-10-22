@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4d487b53dc26e9e4abc7d4e2b9583950
+guid: 478a6026f0dd65848ac9bd87ba4f2ab2
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -113,48 +113,36 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: timer_0
+      name: timer_transparent_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 693
-        height: 416
+        x: 33
+        y: 229
+        width: 101
+        height: 117
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 98b672de8f98c91478eb2406ce2ff0ea
-      internalID: 832893882
+      spriteID: a3c0eeb9caea98b4ea9a14fdea360500
+      internalID: -1934227994
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: timer_1
+      name: timer_transparent_1
       rect:
         serializedVersion: 2
         x: 165
-        y: 228
+        y: 229
         width: 101
         height: 117
       alignment: 0
@@ -164,18 +152,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 18a7edd1d12f4b749b5a4a9b2112a4af
-      internalID: -1176821049
+      spriteID: c31bd27b3e12092469af78f8da35a1a7
+      internalID: 1015345820
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: timer_2
+      name: timer_transparent_2
       rect:
         serializedVersion: 2
         x: 297
-        y: 228
+        y: 229
         width: 101
         height: 117
       alignment: 0
@@ -185,18 +173,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c0ae49e1924bb7940ba283c92ee6d411
-      internalID: 760522095
+      spriteID: 0c874ed71e125ce4482c85772505f98e
+      internalID: 1524069191
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: timer_3
+      name: timer_transparent_3
       rect:
         serializedVersion: 2
         x: 429
-        y: 226
+        y: 229
         width: 101
         height: 117
       alignment: 0
@@ -206,8 +194,134 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 95ca2a83843e71f48b75ee9658ec087e
-      internalID: -1987294824
+      spriteID: c7921e078f5bbf2429ae5ff680244e6a
+      internalID: -770453194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timer_transparent_4
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 229
+        width: 101
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ea0a2a0fa7a83747965713ea972b748
+      internalID: -1375666633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timer_transparent_5
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 70
+        width: 101
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9acbc68d7e0c5324996ed5963bd12be9
+      internalID: 981041028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timer_transparent_6
+      rect:
+        serializedVersion: 2
+        x: 165
+        y: 70
+        width: 101
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74ddb3fa91f9bb445921610a13c512be
+      internalID: -1799139598
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timer_transparent_7
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 70
+        width: 101
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fac0c912a15d3644dac34a41e883832c
+      internalID: -1391903258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timer_transparent_8
+      rect:
+        serializedVersion: 2
+        x: 429
+        y: 70
+        width: 101
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2919068489bab746a9bddc6c72c27a0
+      internalID: -1082239008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: timer_transparent_9
+      rect:
+        serializedVersion: 2
+        x: 561
+        y: 70
+        width: 101
+        height: 118
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b542fa41f4a83cc4fb7c8b260345a9df
+      internalID: -915726509
       vertices: []
       indices: 
       edges: []
@@ -215,7 +329,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 3a99a674f7cf22d4f9c24a5a34bcd18b
+    spriteID: f98d6721d41cc844bbb27a74584c51e1
     internalID: 0
     vertices: []
     indices: 
@@ -223,11 +337,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      timer_4: -1987294824
-      timer_0: 832893882
-      timer_2: -1176821049
-      timer_3: 760522095
-      timer_1: -1620546741
+      timer_transparent_6: -1799139598
+      timer_transparent_0: -1934227994
+      timer_transparent_2: 1524069191
+      timer_transparent_3: -770453194
+      timer_transparent_1: 1015345820
+      timer_transparent_5: 981041028
+      timer_transparent_7: -1391903258
+      timer_transparent_8: -1082239008
+      timer_transparent_9: -915726509
+      timer_transparent_4: -1375666633
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
