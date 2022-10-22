@@ -67,23 +67,23 @@ public class HexagonPlate : MonoBehaviour
         float plateStrength = 3f;
 
         int layer = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
-        Collider[] adjacentPlatesCol = Physics.OverlapSphere(transform.position, plateStrength, layer);
+        // Collider[] adjacentPlatesCol = Physics.OverlapSphere(transform.position, plateStrength, layer);
 
-        HexagonPlate[] adjacentPlatesObj = new HexagonPlate[adjacentPlatesCol.Length];
+        // HexagonPlate[] adjacentPlatesObj = new HexagonPlate[adjacentPlatesCol.Length];
 
-        int index = 0;
-        foreach(Collider col in adjacentPlatesCol)
-        {
-            adjacentPlatesObj[index] = col.GetComponent<HexagonPlate>();
-            adjacentPlatesObj[index].isTriggered = true;
-            adjacentPlatesCol[index].gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
-            index++;
-        }
+        // int index = 0;
+        // foreach(Collider col in adjacentPlatesCol)
+        // {
+        //     adjacentPlatesObj[index] = col.GetComponent<HexagonPlate>();
+        //     adjacentPlatesObj[index].isTriggered = true;
+        //     adjacentPlatesCol[index].gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
+        //     index++;
+        // }
         
-        if(adjacentPlatesCol.Length > 0 && adjacentPlatesObj.Length == adjacentPlatesCol.Length)
-        {
-            HexagonZoneManager.instance.AddHexagonsForPlayer(adjacentPlatesObj, 0);
-        }
+        // if(adjacentPlatesCol.Length > 0 && adjacentPlatesObj.Length == adjacentPlatesCol.Length)
+        // {
+        //     HexagonZoneManager.instance.AddHexagonsForPlayer(adjacentPlatesObj, 0);
+        // }
 
         HexagonPlate.PlateTriggeredEvent.Invoke(this);
     }

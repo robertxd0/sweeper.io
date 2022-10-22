@@ -12,10 +12,8 @@ public class BombHelper : ScriptableObject
         //init?  
     }
 
-    public GameObject SpawnHexagon()
-    {
-        var hexagonInstance = Instantiate(bombPrefab);
-
-        return hexagonInstance;
+    public GameObject SpawnBomb()
+    {                       
+        return Instantiate(bombPrefab);
     }
 }
