@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class HexagonPlate : MonoBehaviour
 {
-    public static PlateTriggeredEvent PlateTriggeredEvent;
+    public static PlateTriggeredEvent PlateTriggeredEvent = new PlateTriggeredEvent();
 
     [SerializeField] Material triggerablePlateLook;
     [SerializeField] Material untriggeredPlateLook; 
@@ -85,7 +85,7 @@ public class HexagonPlate : MonoBehaviour
             HexagonZoneManager.instance.AddHexagonsForPlayer(adjacentPlatesObj, 0);
         }
 
-        PlateTriggeredEvent.Invoke(this);
+        HexagonPlate.PlateTriggeredEvent.Invoke(this);
     }
 
     void Start()
