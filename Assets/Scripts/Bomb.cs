@@ -4,10 +4,32 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
+    [SerializeField] private ParticleSystem explosionFX;
+    
+    [SerializeField] private GameObject timer;
+
+    private HexagonPlate plate;
+    private MeshRenderer meshRenderer;
+
+    private void Start() {
+        if(meshRenderer == null)
+            this.meshRenderer = GetComponent<MeshRenderer>();
         
+        this.meshRenderer.enabled = true;
+        timer.SetActive(true);
+    }
+
+    public void SetPlate(HexagonPlate plate)
+    {
+        this.plate = plate;
+    }
+
+    public void Explode()
+    {
+        this.meshRenderer.enabled = false;
+        timer.SetActive(false);
+        explosionFX.Play(true);
+        plate.TriggerPostExplosion();
     }
 
     // Update is called once per frame

@@ -12,8 +12,11 @@ public class BombHelper : ScriptableObject
         //init?  
     }
 
-    public GameObject SpawnBomb()
-    {                       
-        return Instantiate(bombPrefab);
+    public Bomb SpawnBomb()
+    {          
+        var bomb = Instantiate(bombPrefab);
+        Bomb bombObj = bomb.GetComponent<Bomb>();
+
+        return bombObj;
     }
 }

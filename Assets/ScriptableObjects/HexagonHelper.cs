@@ -7,6 +7,8 @@ public class HexagonHelper : ScriptableObject
 {
     public GameObject hexagonPrefab = null;
 
+    public GameObject[] resourcePrefabs;
+
     internal float? hexagonWidth;
 
     internal float? hexagonDepth;
@@ -28,7 +30,13 @@ public class HexagonHelper : ScriptableObject
     public GameObject SpawnHexagon()
     {
         var hexagonInstance = Instantiate(hexagonPrefab);
+        var resourceInstance = Instantiate(resourcePrefabs[Random.Range(0, resourcePrefabs.Length-1)]);
+        
+        HexagonPlate plateObj = hexagonInstance.GetComponent<HexagonPlate>();
+        Resource resourceObj = resourceInstance.GetComponent<Resource>();
 
+        plateObj.SetResource(resourceObj);
+    
         return hexagonInstance;
     }
 }

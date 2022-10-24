@@ -25,7 +25,8 @@ public class BombFactory : MonoBehaviour
         var pos = plate.transform.position;
         pos.y += 1f;
 
-        bomb.transform.position = pos;
+        bomb.SetPlate(plate);
+        bomb.gameObject.transform.position = pos;
     }
 
 }

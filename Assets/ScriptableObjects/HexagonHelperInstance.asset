@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: HexagonHelperInstance
   m_EditorClassIdentifier: 
   hexagonPrefab: {fileID: 2155471122417398603, guid: 38da7ab7e0302b345afa75a0cfb0cce2, type: 3}
+  resourcePrefabs:
+  - {fileID: 1949591130436844729, guid: edf48b47d5f6f7246b61d7797ce1017e, type: 3}
