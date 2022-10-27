@@ -1,21 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class HexagonPlate : MonoBehaviour
 {
+    public static PlateTriggeredEvent PlateTriggeredEvent = new PlateTriggeredEvent();
+
     [SerializeField] Material triggerablePlateLook;
     [SerializeField] Material untriggeredPlateLook; 
-
-    private Material standardPlateLook;
-
-    internal bool isTriggered;
     
-    internal bool triggerable = false;
-
-
     [InspectorButton("TriggerTest")]
     public bool Trigger;
+
+    internal bool isTriggered;
+    internal bool triggerable = false;
+    private Resource resource; 
+    private Material standardPlateLook;
+
 
     private void TriggerTest()
     {
@@ -33,11 +35,24 @@ public class HexagonPlate : MonoBehaviour
         }
     }
 
+    public void SetResource(Resource resourcePrefab)
+    {
+        resourcePrefab.gameObject.transform.SetParent(transform);
+        resourcePrefab.gameObject.transform.localPosition = new Vector3(0f, 0f, 1.5f);
+
+        this.resource = resourcePrefab;
+    }
+
     public void SetTriggerable()
     {
         this.triggerable = true;
         this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
         this.GetComponent<MeshRenderer>().material = triggerablePlateLook;
+
+        if(resource.gameObject.activeInHierarchy)
+        {
+            resource.Explode();
+        }
     }
 
     public void SetUnTriggerable()
@@ -45,6 +60,11 @@ public class HexagonPlate : MonoBehaviour
         this.triggerable = false;
         this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
         this.GetComponent<MeshRenderer>().material =  standardPlateLook;
+
+        if(resource.gameObject.activeInHierarchy)
+        {
+            resource.Explode();
+        }
     }
 
     public void SetState(bool triggerReady)
@@ -56,12 +76,17 @@ public class HexagonPlate : MonoBehaviour
 
     private void TriggerPlate()
     {
+        HexagonPlate.PlateTriggeredEvent.Invoke(this);
+    }
+
+    public void TriggerPostExplosion()
+    {
         this.isTriggered = true;
         this.triggerable = false;
         this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
 
         // float plateStrength = Random.Range(2f, 6f);
-        float plateStrength = 3f;
+        float plateStrength = 2f;
 
         int layer = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
         Collider[] adjacentPlatesCol = Physics.OverlapSphere(transform.position, plateStrength, layer);
@@ -94,24 +119,28 @@ public class HexagonPlate : MonoBehaviour
     {
         //check wether player is near this tile
         //bool plateState = false;
-        Collider[] overlappingColliders = Physics.OverlapSphere(transform.position, 15f); // add layer mask
+        Collider[] overlappingColliders = Physics.OverlapSphere(transform.position, 10f); // add layer mask
         foreach (Collider col in overlappingColliders)
         {
             if (col.tag == Constants.TAG_PLAYER)
             {
                 //plateState = true;
                 this.isTriggered = true;
+                this.resource.gameObject.SetActive(false);
                 HexagonPlate[] plate = new HexagonPlate[1] {this};
                 HexagonZoneManager.instance.AddHexagonsForPlayer(plate, 0);
             }
         }
         if(!this.isTriggered)
         {
-            this.GetComponent<MeshRenderer>().material = this.untriggeredPlateLook;
+            //this.GetComponent<MeshRenderer>().material = this.untriggeredPlateLook; OBSOLETE
             this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
         }
         //this.gameObject.SetActive(plateState);
     }
+}
 
-
+[System.Serializable]
+public class PlateTriggeredEvent : UnityEvent<HexagonPlate>
+{
 }
