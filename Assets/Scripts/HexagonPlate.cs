@@ -86,7 +86,7 @@ public class HexagonPlate : MonoBehaviour
         this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
 
         // float plateStrength = Random.Range(2f, 6f);
-        float plateStrength = 1f;
+        float plateStrength = 2f;
 
         int layer = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
         Collider[] adjacentPlatesCol = Physics.OverlapSphere(transform.position, plateStrength, layer);
