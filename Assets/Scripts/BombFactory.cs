@@ -31,7 +31,6 @@ public class BombFactory : MonoBehaviour
 
             bomb.SetPlate(plate);
             bomb.gameObject.transform.position = pos;
-            plate.hasBomb = true;
         }
     }
 

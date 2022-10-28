@@ -14,11 +14,18 @@ public class HexagonPlate : MonoBehaviour
 
     internal bool isTriggered = false;
     internal bool borderPlate = false;
-    internal bool hasBomb = false;
+    
+    public bool hasBomb {
+        get{
+            return bomb != null;
+        }
+    }
+    private Bomb bomb;
     private Resource resource; 
     private Material standardPlateLook;
 
 
+ 
     private void TriggerTest()
     {
        TriggerPlate();
@@ -47,6 +54,11 @@ public class HexagonPlate : MonoBehaviour
     {
         //maybe pooling?
         this.resource = null;
+    }
+
+    public void SetBomb(Bomb bomb)
+    {
+        this.bomb = bomb;
     }
 
     public void SetBorderPlate()
@@ -92,11 +104,8 @@ public class HexagonPlate : MonoBehaviour
         this.borderPlate = false;
         this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
 
-        // float plateStrength = Random.Range(2f, 6f);
-        float plateStrength = 2f;
-
         int layer = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
-        Collider[] adjacentPlatesCol = Physics.OverlapSphere(transform.position, plateStrength, layer);
+        Collider[] adjacentPlatesCol = Physics.OverlapSphere(transform.position, this.bomb.bombStrength, layer);
 
         HexagonPlate[] adjacentPlatesObj = new HexagonPlate[adjacentPlatesCol.Length];
 
