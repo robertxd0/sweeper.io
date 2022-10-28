@@ -23,12 +23,16 @@ public class BombFactory : MonoBehaviour
 
     void PlateTriggered(HexagonPlate plate)
     {
-        var bomb = bombHelper.SpawnBomb();
-        var pos = plate.transform.position;
-        pos.y += 1f;
+        if(!plate.hasBomb)
+        {
+            var bomb = bombHelper.SpawnBomb();
+            var pos = plate.transform.position;
+            pos.y += 1f;
 
-        bomb.SetPlate(plate);
-        bomb.gameObject.transform.position = pos;
+            bomb.SetPlate(plate);
+            bomb.gameObject.transform.position = pos;
+            plate.hasBomb = true;
+        }
     }
 
 }

@@ -14,6 +14,7 @@ public class HexagonPlate : MonoBehaviour
 
     internal bool isTriggered = false;
     internal bool borderPlate = false;
+    internal bool hasBomb = false;
     private Resource resource; 
     private Material standardPlateLook;
 
@@ -25,7 +26,7 @@ public class HexagonPlate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (borderPlate && !isTriggered)
+        if (borderPlate)
         {
             if (other.tag == Constants.TAG_PLAYER)
             {  
@@ -42,15 +43,22 @@ public class HexagonPlate : MonoBehaviour
         this.resource = resourcePrefab;
     }
 
+    private void UnsetResource()
+    {
+        //maybe pooling?
+        this.resource = null;
+    }
+
     public void SetBorderPlate()
     {
         this.borderPlate = true;
         this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES); //it still is a triggered plate
         this.GetComponent<MeshRenderer>().material = borderPlateLook;
 
-        if(resource.gameObject.activeInHierarchy)
+        if(this.resource != null && this.resource.gameObject.activeInHierarchy)
         {
             resource.Explode();
+            UnsetResource();
         }
     }
 
@@ -60,9 +68,10 @@ public class HexagonPlate : MonoBehaviour
         this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
         this.GetComponent<MeshRenderer>().material =  standardPlateLook;
 
-        if(resource.gameObject.activeInHierarchy)
+        if(this.resource != null && this.resource.gameObject.activeInHierarchy)
         {
             resource.Explode();
+            UnsetResource();
         }
     }
 
@@ -76,7 +85,6 @@ public class HexagonPlate : MonoBehaviour
     private void TriggerPlate()
     {
         HexagonPlate.PlateTriggeredEvent.Invoke(this);
-        this.isTriggered = true;
     }
 
     public void TriggerPostExplosion()
