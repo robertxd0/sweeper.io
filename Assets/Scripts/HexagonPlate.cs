@@ -7,14 +7,13 @@ public class HexagonPlate : MonoBehaviour
 {
     public static PlateTriggeredEvent PlateTriggeredEvent = new PlateTriggeredEvent();
 
-    [SerializeField] Material triggerablePlateLook;
-    [SerializeField] Material untriggeredPlateLook; 
+    [SerializeField] Material borderPlateLook;
     
     [InspectorButton("TriggerTest")]
     public bool Trigger;
 
-    internal bool isTriggered;
-    internal bool triggerable = false;
+    internal bool isTriggered = false;
+    internal bool borderPlate = false;
     private Resource resource; 
     private Material standardPlateLook;
 
@@ -26,7 +25,7 @@ public class HexagonPlate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (triggerable && isTriggered)
+        if (borderPlate && !isTriggered)
         {
             if (other.tag == Constants.TAG_PLAYER)
             {  
@@ -43,11 +42,11 @@ public class HexagonPlate : MonoBehaviour
         this.resource = resourcePrefab;
     }
 
-    public void SetTriggerable()
+    public void SetBorderPlate()
     {
-        this.triggerable = true;
-        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
-        this.GetComponent<MeshRenderer>().material = triggerablePlateLook;
+        this.borderPlate = true;
+        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES); //it still is a triggered plate
+        this.GetComponent<MeshRenderer>().material = borderPlateLook;
 
         if(resource.gameObject.activeInHierarchy)
         {
@@ -55,9 +54,9 @@ public class HexagonPlate : MonoBehaviour
         }
     }
 
-    public void SetUnTriggerable()
+    public void UnsetBorderPlate()
     {
-        this.triggerable = false;
+        this.borderPlate = false;
         this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
         this.GetComponent<MeshRenderer>().material =  standardPlateLook;
 
@@ -70,19 +69,19 @@ public class HexagonPlate : MonoBehaviour
     public void SetState(bool triggerReady)
     {
         MeshRenderer renderer = this.GetComponent<MeshRenderer>();
-        if(triggerReady) renderer.material = this.triggerablePlateLook;
+        if(triggerReady) renderer.material = this.borderPlateLook;
         else renderer.material = this.standardPlateLook;
     }
 
     private void TriggerPlate()
     {
         HexagonPlate.PlateTriggeredEvent.Invoke(this);
+        this.isTriggered = true;
     }
 
     public void TriggerPostExplosion()
     {
-        this.isTriggered = true;
-        this.triggerable = false;
+        this.borderPlate = false;
         this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
 
         // float plateStrength = Random.Range(2f, 6f);

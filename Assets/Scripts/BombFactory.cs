@@ -6,17 +6,19 @@ public class BombFactory : MonoBehaviour
 {
     [SerializeField] BombHelper bombHelper;
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
         HexagonPlate.PlateTriggeredEvent.AddListener(PlateTriggered);
     }
 
-    private void OnDisable() {
+    private void OnDisable()
+    {
         HexagonPlate.PlateTriggeredEvent.RemoveListener(PlateTriggered);
     }
 
     void Start()
     {
-        
+
     }
 
     void PlateTriggered(HexagonPlate plate)
