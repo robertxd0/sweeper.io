@@ -63,11 +63,11 @@ public class HexagonZoneManager : MonoBehaviour
         {
             if (CheckBorderHexagon(plate))
             {
-                plate.SetTriggerable();
+                plate.SetBorderPlate();
             }
             else
             {
-                plate.SetUnTriggerable();
+                plate.UnsetBorderPlate();
             }
         }
     }

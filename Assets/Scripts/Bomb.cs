@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
+    public float bombStrength = 1f;
+
     [SerializeField] private ParticleSystem explosionFX;
     
     [SerializeField] private GameObject timer;
-
+    
     private HexagonPlate plate;
     private MeshRenderer meshRenderer;
 
@@ -22,6 +24,7 @@ public class Bomb : MonoBehaviour
     public void SetPlate(HexagonPlate plate)
     {
         this.plate = plate;
+        this.plate.SetBomb(this);
     }
 
     public void Explode()

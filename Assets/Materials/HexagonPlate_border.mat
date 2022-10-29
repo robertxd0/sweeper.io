@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: HexagonPlate_triggerable
+  m_Name: HexagonPlate_border
   m_Shader: {fileID: 4800000, guid: 81a53098d5fbc4b7a91a2fb3cf0731f4, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
