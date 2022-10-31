@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class ResourceFXCallback : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private Resource resource;
+    private ParticleSystem particleSystem;
 
-    // Update is called once per frame
-    void Update()
+    void Start() {
+        this.resource = GetComponentInParent<Resource>();
+        this.particleSystem = GetComponent<ParticleSystem>(); 
+    } 
+
+    public void OnParticleSystemStopped()
     {
-        
+        this.resource.OnParticleSystemStopped(particleSystem);
     }
 }

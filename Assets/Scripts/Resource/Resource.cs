@@ -27,5 +27,14 @@ public class Resource : MonoBehaviour
         this.marker.gameObject.SetActive(false);
         explosionFX.Play(false);
     }
+
+    public void OnParticleSystemStopped(ParticleSystem system)
+    {
+        ParticleSystem.Particle[] particles = new ParticleSystem.Particle[system.particleCount];
+        system.GetParticles(particles);
+
+        //implement collection logic here
+
+    }
     
 }
