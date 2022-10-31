@@ -33,7 +33,11 @@ public class Resource : MonoBehaviour
         ParticleSystem.Particle[] particles = new ParticleSystem.Particle[system.particleCount];
         system.GetParticles(particles);
 
-        //implement collection logic here
+        //swap particle with real rock
+        foreach(ParticleSystem.Particle particle in particles)
+        {
+            var t = 1;
+        }
 
     }
     

@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class ResourceFXCallback : MonoBehaviour
 {
-    private Resource resource;
-    private ParticleSystem particleSystem;
+    ParticleSystem particleSystem;
 
-    void Start() {
-        this.resource = GetComponentInParent<Resource>();
-        this.particleSystem = GetComponent<ParticleSystem>(); 
-    } 
-
-    public void OnParticleSystemStopped()
+    private void Start() {
+        particleSystem = GetComponent<ParticleSystem>();
+        particleSystem.trigger.AddCollider(ResourceCollector.instance.collectorCollider);
+    }
+    void OnParticleTrigger()
     {
-        this.resource.OnParticleSystemStopped(particleSystem);
+        Debug.Log("haha lol");
     }
 }
