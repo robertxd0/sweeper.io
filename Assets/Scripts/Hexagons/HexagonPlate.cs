@@ -24,6 +24,9 @@ public class HexagonPlate : MonoBehaviour
     private Resource resource; 
     private Material standardPlateLook;
 
+    private Collider[] adjacentPlatesCol;
+    private HexagonPlate[] adjacentPlatesObj;
+
 
  
     private void TriggerTest()
@@ -40,6 +43,11 @@ public class HexagonPlate : MonoBehaviour
                 TriggerPlate();
             }
         }
+    }
+
+    public void EnableMarker()
+    {
+        this.resource.EnableMarker();
     }
 
     public void SetResource(Resource resourcePrefab)
@@ -96,28 +104,30 @@ public class HexagonPlate : MonoBehaviour
 
     private void TriggerPlate()
     {
-        HexagonPlate.PlateTriggeredEvent.Invoke(this);
-    }
-
-    public void TriggerPostExplosion()
-    {
         this.borderPlate = false;
         this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
 
         int layer = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
-        Collider[] adjacentPlatesCol = Physics.OverlapSphere(transform.position, this.bomb.bombStrength, layer);
+        this.adjacentPlatesCol = Physics.OverlapSphere(transform.position, Bomb.bombStrength, layer);
 
-        HexagonPlate[] adjacentPlatesObj = new HexagonPlate[adjacentPlatesCol.Length];
+        this.adjacentPlatesObj = new HexagonPlate[adjacentPlatesCol.Length];
 
         int index = 0;
         foreach(Collider col in adjacentPlatesCol)
         {
             adjacentPlatesObj[index] = col.GetComponent<HexagonPlate>();
             adjacentPlatesObj[index].isTriggered = true;
+            adjacentPlatesObj[index].EnableMarker();
             adjacentPlatesCol[index].gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
             index++;
         }
-        
+
+        HexagonPlate.PlateTriggeredEvent.Invoke(this);
+    }
+
+    public void TriggerPostExplosion()
+    {
+
         if(adjacentPlatesCol.Length > 0 && adjacentPlatesObj.Length == adjacentPlatesCol.Length)
         {
             HexagonZoneManager.instance.AddHexagonsForPlayer(adjacentPlatesObj, 0);

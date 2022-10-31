@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-    public float bombStrength = 1f;
+    public static float bombStrength = 2f;
 
     [SerializeField] private ParticleSystem explosionFX;
     
     [SerializeField] private GameObject timer;
+
     
     private HexagonPlate plate;
     private MeshRenderer meshRenderer;
@@ -30,9 +31,9 @@ public class Bomb : MonoBehaviour
     public void Explode()
     {
         this.meshRenderer.enabled = false;
-        timer.SetActive(false);
-        explosionFX.Play(true);
-        plate.TriggerPostExplosion();
+        this.timer.SetActive(false);
+        this.explosionFX.Play(true);
+        this.plate.TriggerPostExplosion();
     }
 
     // Update is called once per frame

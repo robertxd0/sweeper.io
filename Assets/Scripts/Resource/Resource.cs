@@ -5,6 +5,7 @@ using UnityEngine;
 public class Resource : MonoBehaviour
 {
     [SerializeField] private ParticleSystem explosionFX;
+    [SerializeField] private ResourceDestructionMarker marker;
 
     private MeshRenderer meshRenderer;
 
@@ -15,9 +16,15 @@ public class Resource : MonoBehaviour
         this.meshRenderer.enabled = true;
     }
 
+    public void EnableMarker()
+    {
+        this.marker.gameObject.SetActive(true);
+    }
+
     public void Explode()
     {
         meshRenderer.enabled = false;
+        this.marker.gameObject.SetActive(false);
         explosionFX.Play(false);
     }
     

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8839069029108408646}
   - component: {fileID: 3807754374852250075}
   m_Layer: 0
-  m_Name: timer_transparent_0
+  m_Name: timer_transparent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
