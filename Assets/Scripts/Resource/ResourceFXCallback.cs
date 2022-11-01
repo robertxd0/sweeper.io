@@ -4,15 +4,23 @@ using UnityEngine;
 
 public class ResourceFXCallback : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    ParticleSystem particleSystem;
 
-    // Update is called once per frame
-    void Update()
+    List<ParticleSystem.Particle> enterParticles = new List<ParticleSystem.Particle>();
+
+
+    private void Start()
     {
-        
+        particleSystem = GetComponent<ParticleSystem>();
+        particleSystem.trigger.AddCollider(ResourceCollector.instance.collectorCollider);
+    }
+    void OnParticleTrigger()
+    {
+        int numEnter = particleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Inside, enterParticles);
+
+        if (numEnter > 0)
+        {
+            ResourceCollector.instance.Collect(enterParticles, ref particleSystem);
+        }
     }
 }

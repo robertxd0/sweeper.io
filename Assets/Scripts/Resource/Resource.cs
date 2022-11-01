@@ -27,5 +27,18 @@ public class Resource : MonoBehaviour
         this.marker.gameObject.SetActive(false);
         explosionFX.Play(false);
     }
+
+    // public void OnParticleSystemStopped(ParticleSystem system)
+    // {
+    //     ParticleSystem.Particle[] particles = new ParticleSystem.Particle[system.particleCount];
+    //     system.GetParticles(particles);
+
+    //     //swap particle with real rock
+    //     foreach(ParticleSystem.Particle particle in particles)
+    //     {
+    //         var t = 1;
+    //     }
+
+    // }
     
 }
