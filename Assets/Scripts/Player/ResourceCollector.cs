@@ -21,27 +21,28 @@ public class ResourceCollector : MonoBehaviour
     public void Collect(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem)
     {
         engagedParticleSystems.Add(originSystem);
-        StartCoroutine(CollectorCoroutine(particles, engagedParticleSystems.Count - 1));
+        StartCoroutine(CollectorCoroutine(particles));
     }
 
-    IEnumerator CollectorCoroutine(List<ParticleSystem.Particle> particles, int index)
+    IEnumerator CollectorCoroutine(List<ParticleSystem.Particle> particles)
     {
-        var end = Time.time + 50f;
+        var end = Time.time + 0.5f;
         while(Time.time < end)
         {
             for(int i = 0; i < particles.Count; i++)
             {
                 ParticleSystem.Particle p = particles[i];
                 p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
-                p.remainingLifetime = 2.5f;
+                if(p.remainingLifetime > 0.5f) //adapt lifetime based on distance.
+                    p.remainingLifetime = 0.5f;
                 particles[i] = p;
             }
-            if(engagedParticleSystems[index].GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Enter) == particles.Count && engagedParticleSystems.Count > index)
+            if(engagedParticleSystems[engagedParticleSystems.Count - 1].GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count)
             {
-                engagedParticleSystems[index].SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
+                engagedParticleSystems[engagedParticleSystems.Count - 1].SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
             }
             yield return null;
         }
-        engagedParticleSystems.Remove(engagedParticleSystems[index]);
+        engagedParticleSystems.Remove(engagedParticleSystems[engagedParticleSystems.Count - 1]);
     }
 }

@@ -16,7 +16,7 @@ public class ResourceFXCallback : MonoBehaviour
     }
     void OnParticleTrigger()
     {
-        int numEnter = particleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, enterParticles);
+        int numEnter = particleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Inside, enterParticles);
 
         if (numEnter > 0)
         {

@@ -28,17 +28,17 @@ public class Resource : MonoBehaviour
         explosionFX.Play(false);
     }
 
-    public void OnParticleSystemStopped(ParticleSystem system)
-    {
-        ParticleSystem.Particle[] particles = new ParticleSystem.Particle[system.particleCount];
-        system.GetParticles(particles);
+    // public void OnParticleSystemStopped(ParticleSystem system)
+    // {
+    //     ParticleSystem.Particle[] particles = new ParticleSystem.Particle[system.particleCount];
+    //     system.GetParticles(particles);
 
-        //swap particle with real rock
-        foreach(ParticleSystem.Particle particle in particles)
-        {
-            var t = 1;
-        }
+    //     //swap particle with real rock
+    //     foreach(ParticleSystem.Particle particle in particles)
+    //     {
+    //         var t = 1;
+    //     }
 
-    }
+    // }
     
 }
