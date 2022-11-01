@@ -7,6 +7,8 @@ public class ResourceCollector : MonoBehaviour
     public static ResourceCollector instance;
     public Collider collectorCollider;
 
+    private List<ParticleSystem> engagedParticleSystems = new List<ParticleSystem>();
+
     private void Awake() {
         instance = this;
 
@@ -16,13 +18,30 @@ public class ResourceCollector : MonoBehaviour
         instance = null;
     }
 
-    void OnParticleCollision(GameObject other)
+    public void Collect(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem)
     {
-        Debug.Log("lol");
-        ParticleSystem originParticleSystem = other.GetComponent<ParticleSystem>();
-        if(originParticleSystem != null)
+        engagedParticleSystems.Add(originSystem);
+        StartCoroutine(CollectorCoroutine(particles, engagedParticleSystems.Count - 1));
+    }
+
+    IEnumerator CollectorCoroutine(List<ParticleSystem.Particle> particles, int index)
+    {
+        var end = Time.time + 50f;
+        while(Time.time < end)
         {
-            Debug.LogFormat("collided with particles from {0}", other.name);
+            for(int i = 0; i < particles.Count; i++)
+            {
+                ParticleSystem.Particle p = particles[i];
+                p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
+                p.remainingLifetime = 2.5f;
+                particles[i] = p;
+            }
+            if(engagedParticleSystems[index].GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Enter) == particles.Count && engagedParticleSystems.Count > index)
+            {
+                engagedParticleSystems[index].SetTriggerParticles(ParticleSystemTriggerEventType.Enter, particles);
+            }
+            yield return null;
         }
+        engagedParticleSystems.Remove(engagedParticleSystems[index]);
     }
 }

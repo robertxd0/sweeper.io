@@ -6,12 +6,21 @@ public class ResourceFXCallback : MonoBehaviour
 {
     ParticleSystem particleSystem;
 
-    private void Start() {
+    List<ParticleSystem.Particle> enterParticles = new List<ParticleSystem.Particle>();
+
+
+    private void Start()
+    {
         particleSystem = GetComponent<ParticleSystem>();
         particleSystem.trigger.AddCollider(ResourceCollector.instance.collectorCollider);
     }
     void OnParticleTrigger()
     {
-        Debug.Log("haha lol");
+        int numEnter = particleSystem.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, enterParticles);
+
+        if (numEnter > 0)
+        {
+            ResourceCollector.instance.Collect(enterParticles, ref particleSystem);
+        }
     }
 }
