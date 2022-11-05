@@ -2,26 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//This class provides the hexagonal tiles with bombs.
 public class BombFactory : MonoBehaviour
 {
-    [SerializeField] BombHelper bombHelper;
+    [SerializeField] private BombHelper bombHelper;
 
     private void OnEnable()
     {
-        HexagonPlate.PlateTriggeredEvent.AddListener(PlateTriggered);
+        HexagonPlate.PlateTriggeredEvent.AddListener(PlateTriggeredEvent);
     }
 
     private void OnDisable()
     {
-        HexagonPlate.PlateTriggeredEvent.RemoveListener(PlateTriggered);
+        HexagonPlate.PlateTriggeredEvent.RemoveListener(PlateTriggeredEvent);
     }
 
     void Start()
     {
-
+        bombHelper.InitHelper();
     }
 
-    void PlateTriggered(HexagonPlate plate)
+    void PlateTriggeredEvent(HexagonPlate plate)
     {
         if(!plate.hasBomb)
         {

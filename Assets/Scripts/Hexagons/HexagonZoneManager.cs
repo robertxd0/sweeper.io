@@ -2,11 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//🐱‍🐉
 public class HexagonZoneManager : MonoBehaviour
 {
     public static HexagonZoneManager instance;
-
-    [SerializeField] public int[] directionMappingArray; //this should not be public 
 
     private Dictionary<int, List<HexagonPlate>> zones;
 
