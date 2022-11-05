@@ -11,7 +11,6 @@ public class ResourceCollector : MonoBehaviour
 
     private void Awake() {
         instance = this;
-
     }
     
     private void OnDisable() {
@@ -37,7 +36,7 @@ public class ResourceCollector : MonoBehaviour
                     p.remainingLifetime = 0.5f;
                 particles[i] = p;
             }
-            if(engagedParticleSystems[engagedParticleSystems.Count - 1].GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count)
+            if(engagedParticleSystems[engagedParticleSystems.Count - 1].GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
             {
                 engagedParticleSystems[engagedParticleSystems.Count - 1].SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
             }

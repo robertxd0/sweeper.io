@@ -36,7 +36,15 @@ public class Bomb : MonoBehaviour
         this.plate.TriggerPostExplosion();
     }
 
-    // Update is called once per frame
+    public void PostExplosion()
+    {
+        this.gameObject.SetActive(false);
+        this.timer.SetActive(true);
+        this.meshRenderer.enabled = true;
+
+        BombHelper.bombPool.PoolObject(this.gameObject);
+    }
+
     void Update()
     {
         

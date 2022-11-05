@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+//this provides... well the hexagons for the grid 🐱‍👤.
 public class GridFactory : MonoBehaviour
 {
-      [SerializeField] HexagonHelper hexagonHelperInstance;
-      [SerializeField] HexagonZoneManager hexagonZoneManager;
+      [SerializeField] private HexagonHelper hexagonHelperInstance;
+      [SerializeField] private HexagonZoneManager hexagonZoneManager;
 
       [SerializeField] internal int width = 5;
       [SerializeField] internal int depth = 5;
