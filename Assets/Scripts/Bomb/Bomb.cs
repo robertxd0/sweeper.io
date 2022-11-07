@@ -11,7 +11,7 @@ public class Bomb : MonoBehaviour
     [SerializeField] private GameObject timer;
 
     
-    private HexagonPlate plate;
+    private HexagonTile plate;
     private MeshRenderer meshRenderer;
 
     private void Start() {
@@ -22,7 +22,7 @@ public class Bomb : MonoBehaviour
         timer.SetActive(true);
     }
 
-    public void SetPlate(HexagonPlate plate)
+    public void SetPlate(HexagonTile plate)
     {
         this.plate = plate;
         this.plate.SetBomb(this);

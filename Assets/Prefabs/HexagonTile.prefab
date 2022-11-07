@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2155471122417398600}
   - component: {fileID: 1913509071096475183}
   m_Layer: 0
-  m_Name: HexagonPlate
+  m_Name: HexagonTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,4 +111,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   borderPlateLook: {fileID: 2100000, guid: 53f8d98028b49854a96d45a7d4f70250, type: 2}
+  shopPlateLook: {fileID: 2100000, guid: 5a902ddf9f0dd1f46b790b69d110e855, type: 2}
   Trigger: 0

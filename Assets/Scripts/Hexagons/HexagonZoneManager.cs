@@ -7,11 +7,11 @@ public class HexagonZoneManager : MonoBehaviour
 {
     public static HexagonZoneManager instance;
 
-    private Dictionary<int, List<HexagonPlate>> zones;
+    private Dictionary<int, List<HexagonTile>> zones;
 
     private GridFactory factory;
     private Coroutine hexagonZoneCoroutine; // move to hexagonzonemanager when done testing
-    private List<HexagonPlate> recentlyAddedPlates; // move to hexagonzonemanager when done testing
+    private List<HexagonTile> recentlyAddedPlates; // move to hexagonzonemanager when done testing
 
 
     private void Awake()
@@ -20,7 +20,7 @@ public class HexagonZoneManager : MonoBehaviour
     }
     void Start()
     {
-        zones = new Dictionary<int, List<HexagonPlate>>();
+        zones = new Dictionary<int, List<HexagonTile>>();
         factory = GetComponent<GridFactory>();
     }
 
@@ -31,11 +31,11 @@ public class HexagonZoneManager : MonoBehaviour
         this.UpdateZone(playerId);
     }
 
-    public void AddHexagonsForPlayer(HexagonPlate[] hexagonPlates, int playerId)
+    public void AddHexagonsForPlayer(HexagonTile[] hexagonPlates, int playerId)
     {
         if (!zones.ContainsKey(playerId))
         {
-            List<HexagonPlate> hexagons = new List<HexagonPlate>();
+            List<HexagonTile> hexagons = new List<HexagonTile>();
             hexagons.AddRange(hexagonPlates);
             zones.Add(playerId, hexagons);     
         }
@@ -58,8 +58,10 @@ public class HexagonZoneManager : MonoBehaviour
           return;
         }
 
-        foreach (HexagonPlate plate in zones[playerId])
+        foreach (HexagonTile plate in zones[playerId])
         {
+            
+
             if (CheckBorderHexagon(plate))
             {
                 plate.SetBorderPlate();
@@ -71,7 +73,7 @@ public class HexagonZoneManager : MonoBehaviour
         }
     }
 
-    bool CheckBorderHexagon(HexagonPlate plate)
+    bool CheckBorderHexagon(HexagonTile plate)
     {
         int layerMask = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
 

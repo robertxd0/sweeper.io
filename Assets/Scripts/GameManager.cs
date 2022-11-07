@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        //load from playerprefs
         currentProps = new PlayerProperties();
         currentProps.bombCount = 5;
         currentProps.resourceCount = 0;
@@ -50,4 +51,5 @@ public struct PlayerProperties
 {
     public int bombCount;
     public int resourceCount;
+    public int money;
 }

@@ -32,7 +32,7 @@ public class HexagonHelper : ScriptableObject
         var hexagonInstance = Instantiate(hexagonPrefab);
         var resourceInstance = Instantiate(resourcePrefabs[Random.Range(0, resourcePrefabs.Length-1)]);
         
-        HexagonPlate plateObj = hexagonInstance.GetComponent<HexagonPlate>();
+        HexagonTile plateObj = hexagonInstance.GetComponent<HexagonTile>();
         Resource resourceObj = resourceInstance.GetComponent<Resource>();
 
         plateObj.SetResource(resourceObj);
