@@ -27,7 +27,7 @@ public class HexagonPlate : MonoBehaviour
     private Collider[] adjacentPlatesCol;
     private HexagonPlate[] adjacentPlatesObj;
 
-
+    private GameManager manager;
  
     private void TriggerTest()
     {
@@ -38,9 +38,10 @@ public class HexagonPlate : MonoBehaviour
     {
         if (borderPlate)
         {
-            if (other.tag == Constants.TAG_PLAYER)
+            if (other.tag == Constants.TAG_PLAYER && manager.HasBombs())
             {  
                 TriggerPlate();
+                manager.ConsumeBomb();
             }
         }
     }
@@ -138,6 +139,8 @@ public class HexagonPlate : MonoBehaviour
     {
         this.standardPlateLook = this.GetComponent<MeshRenderer>().material;
         this.isTriggered = false;
+        this.manager = GameManager.instance;
+        
         InitPlateState();
     }
 

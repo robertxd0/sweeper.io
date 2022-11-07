@@ -9,12 +9,17 @@ public class ResourceCollector : MonoBehaviour
 
     private List<ParticleSystem> engagedParticleSystems = new List<ParticleSystem>();
 
+    private GameManager manager;
+
     private void Awake() {
         instance = this;
     }
     
     private void OnDisable() {
         instance = null;
+    }
+    private void Start() {
+        manager = GameManager.instance;
     }
 
     public void Collect(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem)
@@ -32,8 +37,11 @@ public class ResourceCollector : MonoBehaviour
             {
                 ParticleSystem.Particle p = particles[i];
                 p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
-                if(p.remainingLifetime > 0.5f) //adapt lifetime based on distance.
+                if(p.remainingLifetime > 0.5f) //TODO: adapt lifetime based on particle distance.
+                { 
                     p.remainingLifetime = 0.5f;
+                    manager.UpdateResources();
+                }
                 particles[i] = p;
             }
             if(engagedParticleSystems[engagedParticleSystems.Count - 1].GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
