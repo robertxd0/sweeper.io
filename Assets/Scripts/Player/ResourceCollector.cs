@@ -37,9 +37,9 @@ public class ResourceCollector : MonoBehaviour
             {
                 ParticleSystem.Particle p = particles[i];
                 p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
-                if(p.remainingLifetime > 0.5f) //TODO: adapt lifetime based on particle distance.
+                if(p.remainingLifetime > 0.35f) //TODO: adapt lifetime based on particle distance.
                 { 
-                    p.remainingLifetime = 0.5f;
+                    p.remainingLifetime = 0.35f;
                     manager.UpdateResources();
                 }
                 particles[i] = p;

@@ -58,26 +58,29 @@ public class HexagonZoneManager : MonoBehaviour
           return;
         }
 
-        foreach (HexagonTile plate in zones[playerId])
+        foreach (HexagonTile tile in zones[playerId])
         {
-            
-
-            if (CheckBorderHexagon(plate))
+            if(tile.IsShopPlate())
             {
-                plate.SetBorderPlate();
+                continue;
+            }    
+
+            if (CheckBorderHexagon(tile))
+            {
+                tile.SetBorderPlate();
             }
             else
             {
-                plate.UnsetBorderPlate();
+                tile.UnsetBorderPlate();
             }
         }
     }
 
-    bool CheckBorderHexagon(HexagonTile plate)
+    bool CheckBorderHexagon(HexagonTile tile)
     {
         int layerMask = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
 
-        if(Physics.OverlapSphere(plate.transform.position, 1.5f, layerMask).Length > 0){
+        if(Physics.OverlapSphere(tile.transform.position, 1.5f, layerMask).Length > 0){
             return true;
         }
 

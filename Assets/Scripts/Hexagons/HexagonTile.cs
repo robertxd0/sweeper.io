@@ -55,6 +55,11 @@ public class HexagonTile : MonoBehaviour
         this.isShopPlate = true;
     }
 
+    public bool IsShopPlate()
+    {
+        return isShopPlate;
+    }
+
     public void EnableMarker()
     {
         this.resource.EnableMarker();

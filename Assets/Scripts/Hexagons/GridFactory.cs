@@ -23,6 +23,8 @@ public class GridFactory : MonoBehaviour
 
       private List<Vector3> gridPoints;
 
+      private BombShop factory;
+
 
       public static GridFactory GetInstance()
       {
@@ -76,6 +78,8 @@ public class GridFactory : MonoBehaviour
                   }
             }
 
+            Physics.SyncTransforms();
+            this.factory.Init();
       }
 
       void SpawnHexagons()
@@ -90,16 +94,18 @@ public class GridFactory : MonoBehaviour
 
                   if(i == 23) //ok, but not ok. but ok for now.
                   {
-                        PlaceBombFactory(tile);
+                       this.factory = PlaceBombFactory(tile);
                   }
             }
       }
 
-      void PlaceBombFactory(HexagonTile tile)
+      BombShop PlaceBombFactory(HexagonTile tile)
       {
             Vector3 factoryPos = new Vector3(tile.transform.position.x, tile.transform.position.y + 1.5f, tile.transform.position.z);
             GameObject factoryGO = GameObject.Instantiate(bombFactory, factoryPos, bombFactory.transform.rotation);
             factoryGO.transform.parent = tile.transform;
+
+            return factoryGO.GetComponent<BombShop>();
       }
 
       IEnumerable<Vector3> ComputeGridPoints()

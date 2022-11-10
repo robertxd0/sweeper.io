@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Factory : MonoBehaviour
+//this is the in-game factory for bombs (ikr, shit naming..)👀
+public class BombShop : MonoBehaviour
 {
-    void Start()
+     [InspectorButton("Init")]
+    public bool Initialize;
+
+    public void Init()
     {
         int layerMask = 1 << LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
-        Collider[] adjacentTilesColliders = Physics.OverlapSphere(transform.position, 1.5f);
+        Collider[] adjacentTilesColliders = Physics.OverlapSphere(transform.position, 2f);
         foreach(Collider col in adjacentTilesColliders)
         {
             HexagonTile tileObj = col.GetComponent<HexagonTile>();
@@ -16,11 +20,5 @@ public class Factory : MonoBehaviour
                 tileObj.MarkAsShopTile();
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
