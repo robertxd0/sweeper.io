@@ -27,8 +27,24 @@ public class GameManager : MonoBehaviour
 
         inGameUI.HandlePlayerPropertyChange(currentProps);
     }
+    //
+    // Summary:
+    //     Returns true if player has successfully bought. If player has not enough resources, it returns false.
+    public bool IncrementBombs(int bombPrice)
+    {
+        if(bombPrice > currentProps.resourceCount)
+        {
+            return false;
+        }
 
-    public void UpdateResources()
+        currentProps.resourceCount -= bombPrice;
+        currentProps.bombCount++;
+
+        inGameUI.HandlePlayerPropertyChange(currentProps);
+        return true;
+    }
+
+    public void IncrementResources()
     {
         currentProps.resourceCount++;
         inGameUI.HandlePlayerPropertyChange(currentProps);

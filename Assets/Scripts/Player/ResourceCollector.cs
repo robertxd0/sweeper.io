@@ -40,7 +40,7 @@ public class ResourceCollector : MonoBehaviour
                 if(p.remainingLifetime > 0.35f) //TODO: adapt lifetime based on particle distance.
                 { 
                     p.remainingLifetime = 0.35f;
-                    manager.UpdateResources();
+                    manager.IncrementResources();
                 }
                 particles[i] = p;
             }

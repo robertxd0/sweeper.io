@@ -9,6 +9,7 @@ public class HexagonTile : MonoBehaviour
 
     [SerializeField] Material borderPlateLook;
     [SerializeField] Material shopPlateLook;
+
     
     [InspectorButton("TriggerTest")]
     public bool Trigger;
@@ -16,6 +17,7 @@ public class HexagonTile : MonoBehaviour
     internal bool isTriggered = false;
     internal bool borderPlate = false;
 
+    private Dictionary<ShopFeedbackTypes, GameObject> shopFXFeedback;
     
     public bool hasBomb {
         get{
@@ -31,6 +33,8 @@ public class HexagonTile : MonoBehaviour
     private bool isShopPlate = false;
 
     private GameManager manager;
+
+    private BombShop shopInstance;
  
     private void TriggerTest()
     {
@@ -45,12 +49,56 @@ public class HexagonTile : MonoBehaviour
             {  
                 TriggerPlate();
                 manager.ConsumeBomb();
+                return;
+            }
+        }
+        if(isShopPlate)
+        {
+            if (other.tag == Constants.TAG_PLAYER)
+            {  
+                this.shopInstance.StartPurchaseProcess(this);
             }
         }
     }
 
-    public void MarkAsShopTile()
+    private void OnTriggerExit(Collider other) {
+        if(isShopPlate)
+        {
+            if (other.tag == Constants.TAG_PLAYER)
+            {  
+                this.shopInstance.InterruptPurchaseProcess();
+                //sometimes be like that.
+                
+                foreach(GameObject feedbackObj in shopFXFeedback.Values)
+                {
+                    feedbackObj.SetActive(false);
+                }
+            }
+        }
+    }
+
+    public void MarkAsShopTile(BombShop shopInstance)
     {
+        this.shopInstance = shopInstance;
+
+        //get feedback child GO
+        if(shopFXFeedback == null)
+        {
+            shopFXFeedback = new Dictionary<ShopFeedbackTypes, GameObject>();
+        }
+
+        for(int i = 0;  i < transform.childCount; i++)
+        {
+            var child = transform.GetChild(i);
+            if(child.tag == ShopFeedbackTypes.SUCCESS.ToString().ToLower())
+            {
+                shopFXFeedback.Add(ShopFeedbackTypes.SUCCESS, child.gameObject);
+            }else if(child.tag == ShopFeedbackTypes.FAILED.ToString().ToLower())
+            {
+                shopFXFeedback.Add(ShopFeedbackTypes.FAILED, child.gameObject);
+            }
+        }
+
         this.GetComponent<MeshRenderer>().material = shopPlateLook;
         this.isShopPlate = true;
     }
@@ -147,6 +195,11 @@ public class HexagonTile : MonoBehaviour
         {
             HexagonZoneManager.instance.AddHexagonsForPlayer(adjacentPlatesObj, 0);
         }
+    }
+
+    public void ExecuteShopFeedback(ShopFeedbackTypes feedbackType)
+    {
+        this.shopFXFeedback.GetValueOrDefault(feedbackType).SetActive(!this.shopFXFeedback.GetValueOrDefault(feedbackType).activeInHierarchy);
     }
 
     void Start()
