@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
         //load from playerprefs
         currentProps = new PlayerProperties();
         currentProps.bombCount = 5;
-        currentProps.resourceCount = 0;
+        currentProps.resourceCount = 500;
 
         inGameUI.HandlePlayerPropertyChange(currentProps);
     }
