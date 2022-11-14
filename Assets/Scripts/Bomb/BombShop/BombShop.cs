@@ -40,7 +40,7 @@ public class BombShop : MonoBehaviour
 
     public void StartPurchaseProcess(HexagonTile originTile)
     {
-        StartCoroutine(BombPurchaseCoroutine(0.075f, originTile));
+        StartCoroutine(BombPurchaseCoroutine(0.15f, originTile));
     }
 
     public void InterruptPurchaseProcess()

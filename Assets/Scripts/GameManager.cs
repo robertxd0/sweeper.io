@@ -8,6 +8,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private InGameUI inGameUI;
 
+    [SerializeField] InputManager playerInputManager;
+    
+    private FeedbackAnimationManager feedbackAnimationManager;
+
     private PlayerProperties currentProps;
 
     private void Awake() {
@@ -23,9 +27,11 @@ public class GameManager : MonoBehaviour
         //load from playerprefs
         currentProps = new PlayerProperties();
         currentProps.bombCount = 5;
-        currentProps.resourceCount = 500;
+        currentProps.resourceCount = 0;
 
         inGameUI.HandlePlayerPropertyChange(currentProps);
+
+        feedbackAnimationManager = FeedbackAnimationManager.instance;
     }
     //
     // Summary:
@@ -39,7 +45,8 @@ public class GameManager : MonoBehaviour
 
         currentProps.resourceCount -= bombPrice;
         currentProps.bombCount++;
-
+        
+        feedbackAnimationManager.ExecFeedbackFX(FXFeedbackTypes.BOMB_PURCHASE_SUCCESSFUL, playerInputManager.transform);
         inGameUI.HandlePlayerPropertyChange(currentProps);
         return true;
     }
@@ -67,5 +74,4 @@ public struct PlayerProperties
 {
     public int bombCount;
     public int resourceCount;
-    public int money;
 }
