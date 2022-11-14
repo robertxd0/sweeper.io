@@ -8,9 +8,9 @@ public class HexagonTile : MonoBehaviour
     public static PlateTriggeredEvent PlateTriggeredEvent = new PlateTriggeredEvent();
 
     [SerializeField] Material borderPlateLook;
-    [SerializeField] Material shopPlateLook;
+    [SerializeField] Material bombShopPlateLook;
+    [SerializeField] Material upgradeShopPlateLook;
 
-    
     [InspectorButton("TriggerTest")]
     public bool Trigger;
 
@@ -30,11 +30,13 @@ public class HexagonTile : MonoBehaviour
 
     private Collider[] adjacentPlatesCol;
     private HexagonTile[] adjacentPlatesObj;
-    private bool isShopPlate = false;
+    private bool isShopTile = false;
+    private bool isUpgradeShopTile = false;
 
     private GameManager manager;
 
-    private BombShop shopInstance;
+    private BombShop bombShopInstance;
+    private UpgradeShop upgradeShopInstance;
  
     private void TriggerTest()
     {
@@ -52,21 +54,21 @@ public class HexagonTile : MonoBehaviour
                 return;
             }
         }
-        if(isShopPlate)
+        if(isShopTile)
         {
             if (other.tag == Constants.TAG_PLAYER)
             {  
-                this.shopInstance.StartPurchaseProcess(this);
+                this.bombShopInstance.StartPurchaseProcess(this);
             }
         }
     }
 
     private void OnTriggerExit(Collider other) {
-        if(isShopPlate)
+        if(isShopTile)
         {
             if (other.tag == Constants.TAG_PLAYER)
             {  
-                this.shopInstance.InterruptPurchaseProcess();
+                this.bombShopInstance.InterruptPurchaseProcess();
                 //sometimes be like that.
                 
                 foreach(GameObject feedbackObj in shopFXFeedback.Values)
@@ -77,9 +79,10 @@ public class HexagonTile : MonoBehaviour
         }
     }
 
+
     public void MarkAsShopTile(BombShop shopInstance)
     {
-        this.shopInstance = shopInstance;
+        this.bombShopInstance = shopInstance;
 
         //get feedback child GO
         if(shopFXFeedback == null)
@@ -99,13 +102,26 @@ public class HexagonTile : MonoBehaviour
             }
         }
 
-        this.GetComponent<MeshRenderer>().material = shopPlateLook;
-        this.isShopPlate = true;
+        this.GetComponent<MeshRenderer>().material = bombShopPlateLook;
+        this.isShopTile = true;
     }
 
     public bool IsShopPlate()
     {
-        return isShopPlate;
+        return isShopTile;
+    }
+
+    public void MarkAsUpgradeShopTile(UpgradeShop upgradeShopInstance)
+    {
+        this.upgradeShopInstance = upgradeShopInstance;
+        this.GetComponent<MeshRenderer>().material = upgradeShopPlateLook;
+
+        this.isUpgradeShopTile = true;
+    }
+
+    public bool IsUpgradeShopTile()
+    {
+        return isUpgradeShopTile;
     }
 
     public void EnableMarker()

@@ -279,5 +279,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   borderPlateLook: {fileID: 2100000, guid: 53f8d98028b49854a96d45a7d4f70250, type: 2}
-  shopPlateLook: {fileID: 2100000, guid: 5a902ddf9f0dd1f46b790b69d110e855, type: 2}
+  bombShopPlateLook: {fileID: 2100000, guid: 5a902ddf9f0dd1f46b790b69d110e855, type: 2}
+  upgradeShopPlateLook: {fileID: 2100000, guid: 1ae3d469574af744d8f586ea88fea59d, type: 2}
   Trigger: 0

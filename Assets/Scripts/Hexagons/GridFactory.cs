@@ -8,7 +8,8 @@ public class GridFactory : MonoBehaviour
 {
       [SerializeField] private HexagonHelper hexagonHelperInstance;
       
-      [SerializeField] private GameObject bombFactory;
+      [SerializeField] private GameObject bombShopPrefab;
+      [SerializeField] private GameObject upgradeShopPrefab;
 
       [SerializeField] internal int width = 5;
       [SerializeField] internal int depth = 5;
@@ -24,6 +25,8 @@ public class GridFactory : MonoBehaviour
       private List<Vector3> gridPoints;
 
       private BombShop bombShop;
+
+      private UpgradeShop upgradeShop;
 
 
       public static GridFactory GetInstance()
@@ -80,6 +83,7 @@ public class GridFactory : MonoBehaviour
 
             Physics.SyncTransforms();
             this.bombShop.Init();
+            this.upgradeShop.Init();
       }
 
       void SpawnHexagons()
@@ -92,20 +96,34 @@ public class GridFactory : MonoBehaviour
                   HexagonTile tile = hexagon.GetComponent<HexagonTile>();
                   spawnedHexagonTiles.Add(tile);
 
-                  if(i == 23) //ok, but not ok. but ok for now.
+                  if(i == 21) //ok, but not ok. but ok for now.
                   {
                        this.bombShop = PlaceBombFactory(tile);
+                  }
+
+                  if(i == 25)
+                  {
+                        this.upgradeShop = PlaceUpgradeShop(tile);
                   }
             }
       }
 
       BombShop PlaceBombFactory(HexagonTile tile)
       {
-            Vector3 factoryPos = new Vector3(tile.transform.position.x, tile.transform.position.y + 1.5f, tile.transform.position.z);
-            GameObject factoryGO = GameObject.Instantiate(bombFactory, factoryPos, bombFactory.transform.rotation);
-            factoryGO.transform.parent = tile.transform;
+            Vector3 bombShopPos = new Vector3(tile.transform.position.x, tile.transform.position.y + 1.5f, tile.transform.position.z);
+            GameObject bombShopGO = GameObject.Instantiate(bombShopPrefab, bombShopPos, bombShopPrefab.transform.rotation);
+            bombShopGO.transform.parent = tile.transform;
 
-            return factoryGO.GetComponent<BombShop>();
+            return bombShopGO.GetComponent<BombShop>();
+      }
+
+      UpgradeShop PlaceUpgradeShop(HexagonTile tile)
+      {
+            Vector3 upgradeShopPos = new Vector3(tile.transform.position.x, tile.transform.position.y + 1.5f, tile.transform.position.z);
+            GameObject upgradeShopGO = GameObject.Instantiate(upgradeShopPrefab, upgradeShopPos, upgradeShopPrefab.transform.rotation);
+            upgradeShopGO.transform.parent = tile.transform;
+
+            return upgradeShopGO.GetComponent<UpgradeShop>();
       }
 
       IEnumerable<Vector3> ComputeGridPoints()

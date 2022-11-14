@@ -775,7 +775,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hexagonHelperInstance: {fileID: 11400000, guid: e2ac1ea6b336b4e408c4de9936b09ef7, type: 2}
-  bombFactory: {fileID: 1158166198081733813, guid: 56d0c0e6a83a55a4ebb30449ad720320, type: 3}
+  bombShopPrefab: {fileID: 1158166198081733813, guid: 56d0c0e6a83a55a4ebb30449ad720320, type: 3}
+  upgradeShopPrefab: {fileID: 1531360443445353298, guid: 3f98bdb97e2a69240abb619aff67b0e5, type: 3}
   width: 20
   depth: 20
   spread: 1.225
