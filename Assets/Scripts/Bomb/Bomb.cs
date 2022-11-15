@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-    public static float bombStrength = 5f;
+    public static float bombStrength = 1f;
 
     [SerializeField] private ParticleSystem explosionFX;
     

@@ -9,7 +9,7 @@ public class InGameUI : MonoBehaviour
 
     public void HandlePlayerPropertyChange(PlayerProperties props)
     {
-        this.bombCount.text = props.bombCount.ToString();
-        this.resourceCount.text = props.resourceCount.ToString();
+        this.bombCount.text = props.bombCount.ToString() + "/" + props.GetMaxBombCount().ToString();
+        this.resourceCount.text = props.resourceCount.ToString() + "/" + props.GetMaxResourceCount().ToString();
     }
 }
