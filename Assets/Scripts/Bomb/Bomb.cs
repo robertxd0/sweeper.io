@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour
 {
-    public static float bombStrength = 1f;
+    public static float bombStrength = 5f;
 
     [SerializeField] private ParticleSystem explosionFX;
     
@@ -43,10 +43,5 @@ public class Bomb : MonoBehaviour
         this.meshRenderer.enabled = true;
 
         BombHelper.bombPool.PoolObject(this.gameObject);
-    }
-
-    void Update()
-    {
-        
     }
 }

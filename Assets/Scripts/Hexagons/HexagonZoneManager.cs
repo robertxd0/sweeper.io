@@ -10,9 +10,8 @@ public class HexagonZoneManager : MonoBehaviour
     private Dictionary<int, List<HexagonTile>> zones;
 
     private GridFactory factory;
-    private Coroutine hexagonZoneCoroutine; // move to hexagonzonemanager when done testing
-    private List<HexagonTile> recentlyAddedPlates; // move to hexagonzonemanager when done testing
-
+    private Coroutine hexagonZoneCoroutine; 
+    private List<HexagonTile> recentlyAddedPlates;
 
     private void Awake()
     {
@@ -25,7 +24,7 @@ public class HexagonZoneManager : MonoBehaviour
     }
 
 
-    IEnumerator MarkHexagonZoneWithDelay(int playerId) ///move this to the hexagon zone manager
+    IEnumerator MarkHexagonZoneWithDelay(int playerId) 
     {
         yield return new WaitForSeconds(0.25f);
         this.UpdateZone(playerId);

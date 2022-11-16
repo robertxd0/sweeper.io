@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
         currentProps.resourceCount = 0;
         currentProps.bombStrengthLevel = 1;
         currentProps.bombCountLevel = 1;
-        currentProps.resourceCountLevel = 1;
+        currentProps.resourceCountLevel = 20;
 
         inGameUI.HandlePlayerPropertyChange(currentProps);
 
