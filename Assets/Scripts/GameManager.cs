@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
         currentProps.resourceCount = 0;
         currentProps.bombStrengthLevel = 1;
         currentProps.bombCountLevel = 1;
-        currentProps.resourceCountLevel = 20;
+        currentProps.resourceCountLevel = 1;
 
         inGameUI.HandlePlayerPropertyChange(currentProps);
 
@@ -84,6 +84,17 @@ public class GameManager : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void OpenShop()
+    {
+        this.playerInputManager.DisableInput();
+        this.inGameUI.TriggerUpgradeShop(this.currentProps);
+    }
+
+    public void OnShopClosed()
+    {
+        this.playerInputManager.EnableInput();
     }
 }
 

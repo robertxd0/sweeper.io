@@ -5,9 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Create hexagon helper instance", fileName = "HexagonHelperInstance")]
 public class HexagonHelper : ScriptableObject
 {
+    public static int hexagonCount = 0;
+
     public GameObject hexagonPrefab = null;
 
     public GameObject[] resourcePrefabs;
+
+    public GameObject[] coinResourcePrefabs;
 
     internal float? hexagonWidth;
 
@@ -36,6 +40,8 @@ public class HexagonHelper : ScriptableObject
         Resource resourceObj = resourceInstance.GetComponent<Resource>();
 
         plateObj.SetResource(resourceObj);
+
+        HexagonHelper.hexagonCount++;
     
         return hexagonInstance;
     }

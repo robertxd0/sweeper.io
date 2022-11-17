@@ -6,6 +6,13 @@ public class UpgradeShop : MonoBehaviour
 {
     private GameManager manager;
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == Constants.TAG_PLAYER)
+        {
+            manager.OpenShop();
+        }
+    }
 
     public void Init()
     {

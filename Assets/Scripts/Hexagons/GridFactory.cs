@@ -96,14 +96,16 @@ public class GridFactory : MonoBehaviour
                   HexagonTile tile = hexagon.GetComponent<HexagonTile>();
                   spawnedHexagonTiles.Add(tile);
 
-                  if(i == 21) //ok, but not ok. but ok for now.
+                  if(i % 8 == 1 && this.bombShop == null) //ok, but not ok. but ok for now.
                   {
                        this.bombShop = PlaceBombFactory(tile);
+                       continue;
                   }
 
-                  if(i == 25)
+                  if(i % 6 == 1 && this.upgradeShop == null)
                   {
                         this.upgradeShop = PlaceUpgradeShop(tile);
+                        continue; 
                   }
             }
       }

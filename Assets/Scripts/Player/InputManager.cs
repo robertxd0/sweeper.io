@@ -30,6 +30,16 @@ public class InputManager : MonoBehaviour
             }
       }
 
+      public void DisableInput()
+      {
+            this.disableInput = true;
+      }
+
+      public void EnableInput()
+      {
+            this.disableInput = false;
+      }
+
       void HandleInput()
       {
             if (Touchscreen.current != null)
