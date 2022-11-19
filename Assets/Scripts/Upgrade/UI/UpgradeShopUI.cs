@@ -43,7 +43,7 @@ public class UpgradeShopUI : MonoBehaviour
 
     public void CloseShop()
     {
-        this.ClearShopPropertyValues();
         this.gameObject.SetActive(false);
+        this.ClearShopPropertyValues();
     }
 }

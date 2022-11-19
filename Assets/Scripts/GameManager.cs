@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
         currentProps = new PlayerProperties();
         currentProps.bombCount = 5;
         currentProps.resourceCount = 0;
+        currentProps.goldResourceCount = 0;
         currentProps.bombStrengthLevel = 1;
         currentProps.bombCountLevel = 1;
         currentProps.resourceCountLevel = 1;
@@ -103,6 +104,7 @@ public struct PlayerProperties
 {
     public int bombCount;
     public int resourceCount;
+    public int goldResourceCount;
 
     public int bombStrengthLevel;
 

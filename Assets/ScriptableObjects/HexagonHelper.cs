@@ -13,6 +13,9 @@ public class HexagonHelper : ScriptableObject
 
     public GameObject[] coinResourcePrefabs;
 
+    [Range(0f, 1f)]
+    [SerializeField] private float GoldResourceQuota = 0.2f;    
+
     internal float? hexagonWidth;
 
     internal float? hexagonDepth;
@@ -44,5 +47,10 @@ public class HexagonHelper : ScriptableObject
         HexagonHelper.hexagonCount++;
     
         return hexagonInstance;
+    }
+
+    Resource GetNewResource()
+    {
+        
     }
 }

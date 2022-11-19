@@ -6,6 +6,7 @@ public class InGameUI : MonoBehaviour
 {
     [SerializeField] private TMPro.TMP_Text bombCount;
     [SerializeField] private TMPro.TMP_Text resourceCount;
+    [SerializeField] private TMPro.TMP_Text goldResourceCount;
 
     [SerializeField] private UpgradeShopUI upgradeShopUI;
 
@@ -13,6 +14,7 @@ public class InGameUI : MonoBehaviour
     {
         this.bombCount.text = props.bombCount.ToString() + "/" + props.GetMaxBombCount().ToString();
         this.resourceCount.text = props.resourceCount.ToString() + "/" + props.GetMaxResourceCount().ToString();
+        this.goldResourceCount.text = props.goldResourceCount.ToString();
     }
 
 
