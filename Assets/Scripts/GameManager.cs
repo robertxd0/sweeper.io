@@ -8,11 +8,20 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private InGameUI inGameUI;
 
-    [SerializeField] InputManager playerInputManager;
+    [SerializeField] private InputManager playerInputManager;
+
+    [Range(0f, 1f)]
+    [SerializeField] private float resourceIncrementRate = 0.1f;
+    
+    [Range(0f, 1f)]
+    [SerializeField] private float goldResourceIncrementRate = 0.1f;
     
     private FeedbackAnimationManager feedbackAnimationManager;
 
     private PlayerProperties currentProps;
+
+    private float decimalResourceCount = 0f;
+    private float decimalGoldResourceCount = 0f;
 
     private void Awake() {
         instance = this;
@@ -29,13 +38,15 @@ public class GameManager : MonoBehaviour
         currentProps.bombCount = 5;
         currentProps.resourceCount = 0;
         currentProps.goldResourceCount = 0;
-        currentProps.bombStrengthLevel = 1;
-        currentProps.bombCountLevel = 1;
-        currentProps.resourceCountLevel = 1;
+        currentProps.bombStrengthLevel = 5;
+        currentProps.bombCountLevel = 5;
+        currentProps.resourceCountLevel = 5;
 
         inGameUI.HandlePlayerPropertyChange(currentProps);
 
         feedbackAnimationManager = FeedbackAnimationManager.instance;
+
+        Bomb.bombStrength = currentProps.bombStrengthLevel;
     }
     //
     // Summary:
@@ -60,7 +71,18 @@ public class GameManager : MonoBehaviour
         if(currentProps.resourceCount >= currentProps.GetMaxResourceCount())
             return;
         
-        currentProps.resourceCount++;
+        decimalResourceCount += resourceIncrementRate;
+
+        currentProps.resourceCount = (int)decimalResourceCount;
+        inGameUI.HandlePlayerPropertyChange(currentProps);
+    }
+
+
+    public void IncrementGoldResources()
+    {
+        decimalGoldResourceCount += goldResourceIncrementRate;
+
+        currentProps.goldResourceCount = (int)decimalGoldResourceCount;
         inGameUI.HandlePlayerPropertyChange(currentProps);
     }
 

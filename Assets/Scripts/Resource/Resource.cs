@@ -2,11 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ResourceType
+{
+    STANDARD_RES,
+    GOLD_RES
+}
+
 public class Resource : MonoBehaviour
 {
+    [SerializeField] private ResourceType resourceType;
     [SerializeField] private ParticleSystem explosionFX;
     [SerializeField] private ResourceDestructionMarker marker;
 
+    public ResourceType getResourceType {get => resourceType;}
     private MeshRenderer meshRenderer;
 
     private void Start() {

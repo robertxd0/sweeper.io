@@ -2464,6 +2464,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bombCount: {fileID: 1376269556}
   resourceCount: {fileID: 350574480}
+  goldResourceCount: {fileID: 117160832}
   upgradeShopUI: {fileID: 1883101919}
 --- !u!1 &548977940
 GameObject:
@@ -6487,6 +6488,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inGameUI: {fileID: 544251242}
   playerInputManager: {fileID: 2614242617738387306}
+  resourceIncrementRate: 0.7
+  goldResourceIncrementRate: 0.1
 --- !u!4 &1787324049
 Transform:
   m_ObjectHideFlags: 0
