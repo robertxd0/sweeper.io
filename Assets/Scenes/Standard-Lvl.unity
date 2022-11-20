@@ -6489,7 +6489,7 @@ MonoBehaviour:
   inGameUI: {fileID: 544251242}
   playerInputManager: {fileID: 2614242617738387306}
   resourceIncrementRate: 0.7
-  goldResourceIncrementRate: 0.1
+  goldResourceIncrementRate: 0.65
 --- !u!4 &1787324049
 Transform:
   m_ObjectHideFlags: 0
