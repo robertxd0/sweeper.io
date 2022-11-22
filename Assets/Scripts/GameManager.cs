@@ -35,12 +35,12 @@ public class GameManager : MonoBehaviour
     {
         //load from playerprefs
         currentProps = new PlayerProperties();
-        currentProps.bombCount = 5;
+        currentProps.bombCount = 15;
         currentProps.resourceCount = 0;
         currentProps.goldResourceCount = 0;
-        currentProps.bombStrengthLevel = 5;
-        currentProps.bombCountLevel = 5;
-        currentProps.resourceCountLevel = 5;
+        currentProps.bombStrengthLevel = 1;
+        currentProps.bombCountLevel = 2;
+        currentProps.resourceCountLevel = 1;
 
         inGameUI.HandlePlayerPropertyChange(currentProps);
 
@@ -60,6 +60,8 @@ public class GameManager : MonoBehaviour
 
         currentProps.resourceCount -= bombResourceCount;
         currentProps.bombCount++;
+
+        decimalResourceCount = (float)currentProps.resourceCount;
         
         feedbackAnimationManager.ExecFeedbackFX(FXFeedbackTypes.BOMB_PURCHASE_SUCCESSFUL, playerInputManager.transform);
         inGameUI.HandlePlayerPropertyChange(currentProps);
