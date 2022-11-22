@@ -197,6 +197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29c6269f294af9745a325bc29bdb6eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resourceType: 0
   explosionFX: {fileID: 613030707040037936}
   marker: {fileID: 6094638077874888986}
 --- !u!1 &6416355784534063895
@@ -4484,8 +4485,8 @@ ParticleSystem:
         m_NumAlphaKeys: 2
   CustomDataModule:
     enabled: 0
-    mode0: 1
-    vectorComponentCount0: 4
+    mode0: 0
+    vectorComponentCount0: 1
     color0:
       serializedVersion: 2
       minMaxState: 0

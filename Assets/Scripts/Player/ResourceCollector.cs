@@ -9,10 +9,10 @@ public class ResourceCollector : MonoBehaviour
 
     //private List<ParticleSystem> engagedParticleSystems = new List<ParticleSystem>();
 
-    private Dictionary<ResourceType, List<ParticleSystem>> engagedParticleSystems = new Dictionary<ResourceType, List<ParticleSystem>>(); 
+    private Dictionary<ResourceType, List<ParticleSystem>> engagedParticleSystems = new Dictionary<ResourceType, List<ParticleSystem>>();
 
-    private Dictionary<ResourceType, List<Coroutine>> collectorCoroutines = new Dictionary<ResourceType, List<Coroutine>>();
-    
+    private Dictionary<ResourceType, Coroutine> collectorCoroutines = new Dictionary<ResourceType, Coroutine>();
+
     private GameManager manager;
 
     int coroutineStartCountDbg = 0;
@@ -30,107 +30,78 @@ public class ResourceCollector : MonoBehaviour
     private void Start()
     {
         manager = GameManager.instance;
+
+        if (!engagedParticleSystems.ContainsKey(ResourceType.STANDARD_RES))
+        {
+            engagedParticleSystems.Add(ResourceType.STANDARD_RES, new List<ParticleSystem>());
+        }
+
+        if (!engagedParticleSystems.ContainsKey(ResourceType.GOLD_RES))
+        {
+            engagedParticleSystems.Add(ResourceType.GOLD_RES, new List<ParticleSystem>());
+        }
+
+
+        if (!collectorCoroutines.ContainsKey(ResourceType.STANDARD_RES))
+        {
+            collectorCoroutines.Add(ResourceType.STANDARD_RES, null);
+        }
+
+        if (!collectorCoroutines.ContainsKey(ResourceType.GOLD_RES))
+        {
+            collectorCoroutines.Add(ResourceType.GOLD_RES, null);
+        }
+
     }
 
-    private void CollectStandard(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem)
+    private void CollectStandard(ref ParticleSystem originSystem)
     {
-        if (!manager.ResourceLimitReached())
-        {
-            if(!engagedParticleSystems.ContainsKey(ResourceType.STANDARD_RES))
-            {
-                engagedParticleSystems.Add(ResourceType.STANDARD_RES, new List<ParticleSystem>());
-            }
-            engagedParticleSystems[ResourceType.STANDARD_RES].Add(originSystem);
-
-            if(!collectorCoroutines.ContainsKey(ResourceType.STANDARD_RES))
-            {
-                collectorCoroutines.Add(ResourceType.STANDARD_RES, new List<Coroutine>());
-            }
-
-            Coroutine _coroutine = StartCoroutine(StandardCollectorCoroutine(particles));
-            collectorCoroutines[ResourceType.STANDARD_RES].Add(_coroutine);
-        }else
-        {
-            for (int i = 0; i < collectorCoroutines[ResourceType.STANDARD_RES].Count; i++)
-            {
-                StopCoroutine(collectorCoroutines[ResourceType.STANDARD_RES][i]);
-            }
-
-            collectorCoroutines[ResourceType.STANDARD_RES].Clear();
-            CancelCurrentStandardCollectionProcess();
-        } 
+        CollectStandard(ref originSystem);
     }
 
     private void CollectGold(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem)
     {
-        if(!engagedParticleSystems.ContainsKey(ResourceType.GOLD_RES))
-        {
-            engagedParticleSystems.Add(ResourceType.GOLD_RES, new List<ParticleSystem>());
-        }
-        engagedParticleSystems[ResourceType.GOLD_RES].Add(originSystem);
 
-        Coroutine _coroutine = StartCoroutine(GoldCollectorCoroutine(particles));
-        if(!collectorCoroutines.ContainsKey(ResourceType.GOLD_RES))
+        engagedParticleSystems[ResourceType.GOLD_RES].Add(originSystem);
+        if (collectorCoroutines[ResourceType.GOLD_RES] != null)
         {
-            collectorCoroutines.Add(ResourceType.GOLD_RES, new List<Coroutine>());
+            StopCoroutine(collectorCoroutines[ResourceType.GOLD_RES]);
         }
-        collectorCoroutines[ResourceType.GOLD_RES].Add(_coroutine);
+
+        collectorCoroutines[ResourceType.GOLD_RES] = StartCoroutine(GoldCollectorCoroutine(particles));
     }
 
     public void Collect(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem, ResourceType type)
     {
-        switch(type)
+        switch (type)
         {
             case ResourceType.STANDARD_RES:
-                this.CollectStandard(particles, ref originSystem);
-            break;
+                //this.CollectStandard(particles, ref originSystem);
+                break;
             case ResourceType.GOLD_RES:
                 this.CollectGold(particles, ref originSystem);
-            break;
+                break;
         }
     }
 
-    IEnumerator StandardCollectorCoroutine(List<ParticleSystem.Particle> particles)
+
+    void StandardCollectorRoutine(List<ParticleSystem.Particle> particles)
     {
-        var end = Time.time + 0.5f;
-        bool lol = false;
-        this.coroutineStartCountDbg++;
-
-        Debug.Log("[START]: " + coroutineStartCountDbg + " | " + coroutineEndCountDbg  + " | cCount: " + collectorCoroutines[ResourceType.STANDARD_RES].Count);
-
-        while (!lol)
+        for (int i = 0; i < particles.Count; i++)
         {
-            for (int i = 0; i < particles.Count; i++)
+            ParticleSystem.Particle p = particles[i];
+            p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
+            if (p.remainingLifetime > 0.35f) //TODO: adapt lifetime based on particle distance.
             {
-                ParticleSystem.Particle p = particles[i];
-                p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
-                if (p.remainingLifetime > 0.35f) //TODO: adapt lifetime based on particle distance.
-                {
-                    p.remainingLifetime = 0.35f;
-                    manager.IncrementResources();
-                }
-                particles[i] = p;
+                p.remainingLifetime = 0.35f;
+                manager.IncrementResources();
             }
-            if (engagedParticleSystems[ResourceType.STANDARD_RES][engagedParticleSystems[ResourceType.STANDARD_RES].Count - 1].GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
-            {
-                engagedParticleSystems[ResourceType.STANDARD_RES][engagedParticleSystems[ResourceType.STANDARD_RES].Count - 1].SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
-            }
-            lol = true;
-            yield return null;
+            particles[i] = p;
         }
-        engagedParticleSystems[ResourceType.STANDARD_RES].Remove(engagedParticleSystems[ResourceType.STANDARD_RES][engagedParticleSystems[ResourceType.STANDARD_RES].Count - 1]);
-        RemoveLatestCoroutine(ResourceType.STANDARD_RES);
-        this.coroutineEndCountDbg++;
-        Debug.Log("[END]: " + coroutineStartCountDbg + " | " + coroutineEndCountDbg  + " | cCount: " + collectorCoroutines[ResourceType.STANDARD_RES].Count);
-
-    }
-
-    void RemoveLatestCoroutine(ResourceType type)
-    {
-        StopCoroutine(collectorCoroutines[type][collectorCoroutines[type].Count - 1]);
-        collectorCoroutines[type].RemoveAt(collectorCoroutines[type].Count - 1);
-
-        // Debug.Log(type.ToString() +  ":" + collectorCoroutines[type].Count);
+        if (engagedParticleSystems[ResourceType.STANDARD_RES][engagedParticleSystems[ResourceType.STANDARD_RES].Count - 1].GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
+        {
+            engagedParticleSystems[ResourceType.STANDARD_RES][engagedParticleSystems[ResourceType.STANDARD_RES].Count - 1].SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
+        }
     }
 
     IEnumerator GoldCollectorCoroutine(List<ParticleSystem.Particle> particles)
@@ -155,13 +126,12 @@ public class ResourceCollector : MonoBehaviour
             }
             yield return null;
         }
-        engagedParticleSystems[ResourceType.GOLD_RES].Remove(engagedParticleSystems[ResourceType.GOLD_RES][engagedParticleSystems[ResourceType.GOLD_RES].Count - 1]);
-        RemoveLatestCoroutine(ResourceType.GOLD_RES);
+        //engagedParticleSystems[ResourceType.GOLD_RES].RemoveRange(engagedParticleSystems[ResourceType.GOLD_RES].Count - timesStarted, timesStarted);
     }
 
     void CancelCurrentStandardCollectionProcess()
     {
-        foreach(ParticleSystem engagedSys in engagedParticleSystems[ResourceType.STANDARD_RES])
+        foreach (ParticleSystem engagedSys in engagedParticleSystems[ResourceType.STANDARD_RES])
         {
             ParticleSystem.Particle[] availableParticles = new ParticleSystem.Particle[engagedSys.particleCount];
 
@@ -174,5 +144,7 @@ public class ResourceCollector : MonoBehaviour
             }
             engagedSys.SetParticles(availableParticles, availableParticles.Length);
         }
+
+        //engagedParticleSystems.Clear();
     }
 }
