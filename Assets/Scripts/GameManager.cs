@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     {
         //load from playerprefs
         currentProps = new PlayerProperties();
-        currentProps.bombCount = 15;
+        currentProps.bombCount = 0;
         currentProps.resourceCount = 0;
         currentProps.goldResourceCount = 0;
         currentProps.bombStrengthLevel = 1;

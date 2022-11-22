@@ -23,7 +23,7 @@ public class ResourceFXCallback : MonoBehaviour
 
         if (numEnter > 0)
         {
-            ResourceCollector.instance.Collect(enterParticles, ref particleSystem, resourceObj.getResourceType);
+            ResourceCollector.instance.CollectRoutine(enterParticles, ref particleSystem, resourceObj.getResourceType);
         }
     }
 }

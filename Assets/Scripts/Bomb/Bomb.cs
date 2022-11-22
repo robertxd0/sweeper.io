@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
-{
+{    
     public static float bombStrength = 1f;
 
     [SerializeField] private ParticleSystem explosionFX;
     
     [SerializeField] private GameObject timer;
-
     
     private HexagonTile plate;
     private MeshRenderer meshRenderer;

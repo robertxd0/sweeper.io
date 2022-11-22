@@ -17,6 +17,9 @@ public class Resource : MonoBehaviour
     public ResourceType getResourceType {get => resourceType;}
     private MeshRenderer meshRenderer;
 
+    [InspectorButton("Explode")]
+    public bool explode;
+
     private void Start() {
         if(meshRenderer == null)
             this.meshRenderer = GetComponent<MeshRenderer>();
