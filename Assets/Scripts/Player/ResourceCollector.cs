@@ -7,10 +7,9 @@ public class ResourceCollector : MonoBehaviour
     public static ResourceCollector instance;
     public Collider collectorCollider;
 
-    private GameManager manager;
+    public ParticleSystem.MinMaxCurve uncollectedParticleCurve;
 
-    int coroutineStartCountDbg = 0;
-    int coroutineEndCountDbg = 0;
+    private GameManager manager;
 
     private void Awake()
     {
@@ -26,24 +25,38 @@ public class ResourceCollector : MonoBehaviour
         manager = GameManager.instance;
     }
 
+    private List<ParticleSystem> uncollectedParticleSystems = new List<ParticleSystem>();
+
     public void CollectRoutine(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem, ResourceType type)
     {
-        // if (type == ResourceType.STANDARD_RES && manager.ResourceLimitReached())
-        // {
-        //     for (int i = 0; i < particles.Count; i++)
-        //     {
-        //         ParticleSystem.Particle p = particles[i];
-        //         p.remainingLifetime = Mathf.Infinity;
-        //         p.velocity = new Vector3(0f, -1f, 0f)
-        //         particles[i] = p;
-        //     }
+        if (type == ResourceType.STANDARD_RES && manager.ResourceLimitReached())
+        {
+            if (uncollectedParticleSystems.Contains(originSystem))
+            {
+                bool hasCollectableParticles = false;
+                for (int i = 0; i < particles.Count; i++)
+                {
+                    ParticleSystem.Particle p = particles[i];
+                    if(p.remainingLifetime < 1f)
+                    {
+                        p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
+                        hasCollectableParticles = true;
+                    }
+                    particles[i] = p;
+                }
 
-        //     if (originSystem.GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
-        //     {
-        //         originSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
-        //     }
-        //     return;
-        // }
+                if (originSystem.GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
+                {
+                    originSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
+                }
+
+                if(!hasCollectableParticles)
+                {
+                    uncollectedParticleSystems.Remove(originSystem);
+                }
+            }
+            return;
+        }
 
         for (int i = 0; i < particles.Count; i++)
         {
@@ -55,13 +68,26 @@ public class ResourceCollector : MonoBehaviour
                 if (type == ResourceType.GOLD_RES) manager.IncrementGoldResources();
                 else if (type == ResourceType.STANDARD_RES) manager.IncrementResources();
             }
+            else
+            {
+                if(!uncollectedParticleSystems.Contains(originSystem))
+                    uncollectedParticleSystems.Add(originSystem);
+            }
+
             particles[i] = p;
+        }
+
+        if(originSystem.particleCount == 0)
+        {
+            if(uncollectedParticleSystems.Contains(originSystem))
+            {
+                uncollectedParticleSystems.Remove(originSystem);
+            }
         }
 
         if (originSystem.GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
         {
             originSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
         }
-
     }
 }
