@@ -28,22 +28,22 @@ public class ResourceCollector : MonoBehaviour
 
     public void CollectRoutine(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem, ResourceType type)
     {
-        if (type == ResourceType.STANDARD_RES && manager.ResourceLimitReached())
-        {
-            for (int i = 0; i < particles.Count; i++)
-            {
-                ParticleSystem.Particle p = particles[i];
-                p.remainingLifetime = Mathf.Infinity;
-                particles[i] = p;
-            }
+        // if (type == ResourceType.STANDARD_RES && manager.ResourceLimitReached())
+        // {
+        //     for (int i = 0; i < particles.Count; i++)
+        //     {
+        //         ParticleSystem.Particle p = particles[i];
+        //         p.remainingLifetime = Mathf.Infinity;
+        //         p.velocity = new Vector3(0f, -1f, 0f)
+        //         particles[i] = p;
+        //     }
 
-            if (originSystem.GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
-            {
-                originSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
-            }
-
-            return;
-        }
+        //     if (originSystem.GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
+        //     {
+        //         originSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
+        //     }
+        //     return;
+        // }
 
         for (int i = 0; i < particles.Count; i++)
         {
