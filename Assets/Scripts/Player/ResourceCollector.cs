@@ -10,6 +10,9 @@ public class ResourceCollector : MonoBehaviour
     public ParticleSystem.MinMaxCurve uncollectedParticleCurve;
 
     private GameManager manager;
+    private List<ParticleSystem> uncollectedParticleSystems = new List<ParticleSystem>();
+
+    private Coroutine collectorStoppedCoroutine;
 
     private void Awake()
     {
@@ -25,8 +28,6 @@ public class ResourceCollector : MonoBehaviour
         manager = GameManager.instance;
     }
 
-    private List<ParticleSystem> uncollectedParticleSystems = new List<ParticleSystem>();
-
     public void CollectRoutine(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem, ResourceType type)
     {
         if (type == ResourceType.STANDARD_RES && manager.ResourceLimitReached())
@@ -37,7 +38,7 @@ public class ResourceCollector : MonoBehaviour
                 for (int i = 0; i < particles.Count; i++)
                 {
                     ParticleSystem.Particle p = particles[i];
-                    if(p.remainingLifetime < 1f)
+                    if (p.remainingLifetime < 1f)
                     {
                         p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
                         hasCollectableParticles = true;
@@ -50,7 +51,7 @@ public class ResourceCollector : MonoBehaviour
                     originSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
                 }
 
-                if(!hasCollectableParticles)
+                if (!hasCollectableParticles)
                 {
                     uncollectedParticleSystems.Remove(originSystem);
                 }
@@ -70,16 +71,16 @@ public class ResourceCollector : MonoBehaviour
             }
             else
             {
-                if(!uncollectedParticleSystems.Contains(originSystem))
+                if (!uncollectedParticleSystems.Contains(originSystem))
                     uncollectedParticleSystems.Add(originSystem);
             }
 
             particles[i] = p;
         }
 
-        if(originSystem.particleCount == 0)
+        if (originSystem.particleCount == 0)
         {
-            if(uncollectedParticleSystems.Contains(originSystem))
+            if (uncollectedParticleSystems.Contains(originSystem))
             {
                 uncollectedParticleSystems.Remove(originSystem);
             }

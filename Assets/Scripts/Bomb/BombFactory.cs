@@ -9,12 +9,12 @@ public class BombFactory : MonoBehaviour
 
     private void OnEnable()
     {
-        HexagonTile.PlateTriggeredEvent.AddListener(PlateTriggeredEvent);
+        HexagonTile.TileTriggeredEvent.AddListener(PlateTriggeredEvent);
     }
 
     private void OnDisable()
     {
-        HexagonTile.PlateTriggeredEvent.RemoveListener(PlateTriggeredEvent);
+        HexagonTile.TileTriggeredEvent.RemoveListener(PlateTriggeredEvent);
     }
 
     void Start()

@@ -10,9 +10,14 @@ public class GridFactory : MonoBehaviour
       
       [SerializeField] private GameObject bombShopPrefab;
       [SerializeField] private GameObject upgradeShopPrefab;
+      [SerializeField] private GameObject player;
+ 
+      [SerializeField] private float playeZoneRadius = 5f;
 
       [SerializeField] internal int width = 5;
       [SerializeField] internal int depth = 5;
+
+      internal int playerZoneCount = 0;
 
 
       [Range(1f, 2f)]
@@ -84,6 +89,7 @@ public class GridFactory : MonoBehaviour
             Physics.SyncTransforms();
             this.bombShop.Init();
             this.upgradeShop.Init();
+            this.SetPlayerZone(player.transform);
       }
 
       void SpawnHexagons()
@@ -142,6 +148,21 @@ public class GridFactory : MonoBehaviour
 
                         yield return pos;
                   }
+            }
+      }
+
+      void SetPlayerZone(Transform player)
+      {
+            Collider[] adjacentHexagons = Physics.OverlapSphere(player.position, playeZoneRadius);
+            
+            foreach(Collider col in adjacentHexagons)
+            {
+                  HexagonTile tileObj = col.GetComponent<HexagonTile>();
+                  if(tileObj != null)
+                  {
+                        tileObj.InitPlateAsPlayerZone();
+                        this.playerZoneCount++;
+                  }     
             }
       }
 }

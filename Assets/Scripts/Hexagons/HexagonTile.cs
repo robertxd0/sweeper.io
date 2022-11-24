@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class HexagonTile : MonoBehaviour
 {
-    public static PlateTriggeredEvent PlateTriggeredEvent = new PlateTriggeredEvent();
+    public static TileTriggeredEvent TileTriggeredEvent = new TileTriggeredEvent();
 
     [SerializeField] Material borderPlateLook;
     [SerializeField] Material bombShopPlateLook;
@@ -18,14 +18,16 @@ public class HexagonTile : MonoBehaviour
     internal bool borderPlate = false;
 
     private Dictionary<ShopFeedbackTypes, GameObject> shopFXFeedback;
-    
-    public bool hasBomb {
-        get{
+
+    public bool hasBomb
+    {
+        get
+        {
             return bomb != null;
         }
     }
     private Bomb bomb;
-    private Resource resource; 
+    private Resource resource;
     private Material standardPlateLook;
 
     private Collider[] adjacentPlatesCol;
@@ -37,10 +39,10 @@ public class HexagonTile : MonoBehaviour
 
     private BombShop bombShopInstance;
     private UpgradeShop upgradeShopInstance;
- 
+
     private void TriggerTest()
     {
-       TriggerPlate();
+        TriggerPlate();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -48,30 +50,31 @@ public class HexagonTile : MonoBehaviour
         if (borderPlate)
         {
             if (other.tag == Constants.TAG_PLAYER && manager.HasBombs())
-            {  
+            {
                 TriggerPlate();
                 manager.ConsumeBomb();
                 return;
             }
         }
-        if(isShopTile)
+        if (isShopTile)
         {
             if (other.tag == Constants.TAG_PLAYER)
-            {  
+            {
                 this.bombShopInstance.StartPurchaseProcess(this);
             }
         }
     }
 
-    private void OnTriggerExit(Collider other) {
-        if(isShopTile)
+    private void OnTriggerExit(Collider other)
+    {
+        if (isShopTile)
         {
             if (other.tag == Constants.TAG_PLAYER)
-            {  
+            {
                 this.bombShopInstance.InterruptPurchaseProcess();
                 //sometimes be like that.
-                
-                foreach(GameObject feedbackObj in shopFXFeedback.Values)
+
+                foreach (GameObject feedbackObj in shopFXFeedback.Values)
                 {
                     feedbackObj.SetActive(false);
                 }
@@ -85,18 +88,19 @@ public class HexagonTile : MonoBehaviour
         this.bombShopInstance = shopInstance;
 
         //get feedback child GO
-        if(shopFXFeedback == null)
+        if (shopFXFeedback == null)
         {
             shopFXFeedback = new Dictionary<ShopFeedbackTypes, GameObject>();
         }
 
-        for(int i = 0;  i < transform.childCount; i++)
+        for (int i = 0; i < transform.childCount; i++)
         {
             var child = transform.GetChild(i);
-            if(child.tag == ShopFeedbackTypes.SUCCESS.ToString().ToLower())
+            if (child.tag == ShopFeedbackTypes.SUCCESS.ToString().ToLower())
             {
                 shopFXFeedback.Add(ShopFeedbackTypes.SUCCESS, child.gameObject);
-            }else if(child.tag == ShopFeedbackTypes.FAILED.ToString().ToLower())
+            }
+            else if (child.tag == ShopFeedbackTypes.FAILED.ToString().ToLower())
             {
                 shopFXFeedback.Add(ShopFeedbackTypes.FAILED, child.gameObject);
             }
@@ -151,10 +155,11 @@ public class HexagonTile : MonoBehaviour
     public void SetBorderPlate()
     {
         this.borderPlate = true;
+        this.bomb = null;
         this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES); //it still is a triggered plate
         this.GetComponent<MeshRenderer>().material = borderPlateLook;
 
-        if(this.resource != null && this.resource.gameObject.activeInHierarchy)
+        if (this.resource != null && this.resource.gameObject.activeInHierarchy)
         {
             resource.Explode();
             UnsetResource();
@@ -165,9 +170,9 @@ public class HexagonTile : MonoBehaviour
     {
         this.borderPlate = false;
         this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
-        this.GetComponent<MeshRenderer>().material =  standardPlateLook;
+        this.GetComponent<MeshRenderer>().material = standardPlateLook;
 
-        if(this.resource != null && this.resource.gameObject.activeInHierarchy)
+        if (this.resource != null && this.resource.gameObject.activeInHierarchy)
         {
             resource.Explode();
             UnsetResource();
@@ -177,7 +182,7 @@ public class HexagonTile : MonoBehaviour
     public void SetState(bool triggerReady)
     {
         MeshRenderer renderer = this.GetComponent<MeshRenderer>();
-        if(triggerReady) renderer.material = this.borderPlateLook;
+        if (triggerReady) renderer.material = this.borderPlateLook;
         else renderer.material = this.standardPlateLook;
     }
 
@@ -192,7 +197,7 @@ public class HexagonTile : MonoBehaviour
         this.adjacentPlatesObj = new HexagonTile[adjacentPlatesCol.Length];
 
         int index = 0;
-        foreach(Collider col in adjacentPlatesCol)
+        foreach (Collider col in adjacentPlatesCol)
         {
             adjacentPlatesObj[index] = col.GetComponent<HexagonTile>();
             adjacentPlatesObj[index].isTriggered = true;
@@ -201,13 +206,13 @@ public class HexagonTile : MonoBehaviour
             index++;
         }
 
-        HexagonTile.PlateTriggeredEvent.Invoke(this);
+        HexagonTile.TileTriggeredEvent.Invoke(this);
     }
 
     public void TriggerPostExplosion()
     {
 
-        if(adjacentPlatesCol.Length > 0 && adjacentPlatesObj.Length == adjacentPlatesCol.Length)
+        if (adjacentPlatesCol.Length > 0 && adjacentPlatesObj.Length == adjacentPlatesCol.Length)
         {
             HexagonZoneManager.instance.AddHexagonsForPlayer(adjacentPlatesObj, 0);
         }
@@ -223,36 +228,19 @@ public class HexagonTile : MonoBehaviour
         this.standardPlateLook = this.GetComponent<MeshRenderer>().material;
         this.isTriggered = false;
         this.manager = GameManager.instance;
-        
-        InitPlateState();
     }
 
-    void InitPlateState()
+    public void InitPlateAsPlayerZone()
     {
-        //check wether player is near this tile
-        //bool plateState = false;
-        Collider[] overlappingColliders = Physics.OverlapSphere(transform.position, 10f); // add layer mask
-        foreach (Collider col in overlappingColliders)
-        {
-            if (col.tag == Constants.TAG_PLAYER)
-            {
-                //plateState = true;
-                this.isTriggered = true;
-                this.resource.gameObject.SetActive(false);
-                HexagonTile[] plate = new HexagonTile[1] {this};
-                HexagonZoneManager.instance.AddHexagonsForPlayer(plate, 0);
-            }
-        }
-        if(!this.isTriggered)
-        {
-            //this.GetComponent<MeshRenderer>().material = this.untriggeredPlateLook; OBSOLETE
-            this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
-        }
-        //this.gameObject.SetActive(plateState);
+        this.isTriggered = true;
+        this.resource.gameObject.SetActive(false);
+        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
+        HexagonTile[] plate = new HexagonTile[1] {this};
+        HexagonZoneManager.instance.AddHexagonsForPlayer(plate, 0);
     }
 }
 
 [System.Serializable]
-public class PlateTriggeredEvent : UnityEvent<HexagonTile>
+public class TileTriggeredEvent : UnityEvent<HexagonTile>
 {
 }

@@ -10,21 +10,25 @@ public class HexagonZoneManager : MonoBehaviour
     private Dictionary<int, List<HexagonTile>> zones;
 
     private GridFactory factory;
-    private Coroutine hexagonZoneCoroutine; 
+    private Coroutine hexagonZoneCoroutine;
     private List<HexagonTile> recentlyAddedPlates;
+
+    private GameManager gameManager;
 
     private void Awake()
     {
         instance = this;
+
     }
     void Start()
     {
         zones = new Dictionary<int, List<HexagonTile>>();
         factory = GetComponent<GridFactory>();
+        gameManager = GameManager.instance;
     }
 
 
-    IEnumerator MarkHexagonZoneWithDelay(int playerId) 
+    IEnumerator MarkHexagonZoneWithDelay(int playerId)
     {
         yield return new WaitForSeconds(0.25f);
         this.UpdateZone(playerId);
@@ -36,11 +40,13 @@ public class HexagonZoneManager : MonoBehaviour
         {
             List<HexagonTile> hexagons = new List<HexagonTile>();
             hexagons.AddRange(hexagonPlates);
-            zones.Add(playerId, hexagons);     
+            zones.Add(playerId, hexagons);
         }
         else
             zones[playerId].AddRange(hexagonPlates);
-        
+
+        float playerZonesQuota = (float)(zones[playerId].Count - factory.playerZoneCount) / ((factory.width * factory.depth) - factory.playerZoneCount);
+        this.gameManager.UpdateLevelProgress(playerZonesQuota); ;
 
         if (hexagonZoneCoroutine != null)
         {
@@ -54,15 +60,15 @@ public class HexagonZoneManager : MonoBehaviour
     {
         if (!zones.ContainsKey(playerId))
         {
-          return;
+            return;
         }
 
         foreach (HexagonTile tile in zones[playerId])
         {
-            if(tile.IsShopPlate())
+            if (tile.IsShopPlate())
             {
                 continue;
-            }    
+            }
 
             if (CheckBorderHexagon(tile))
             {
@@ -79,7 +85,8 @@ public class HexagonZoneManager : MonoBehaviour
     {
         int layerMask = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
 
-        if(Physics.OverlapSphere(tile.transform.position, 1.5f, layerMask).Length > 0){
+        if (Physics.OverlapSphere(tile.transform.position, 1.5f, layerMask).Length > 0)
+        {
             return true;
         }
 

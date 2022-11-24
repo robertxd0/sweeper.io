@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     {
         //load from playerprefs
         currentProps = new PlayerProperties();
+        currentProps.gameLevel = 1;
         currentProps.bombCount = 10;
         currentProps.resourceCount = 110;
         currentProps.goldResourceCount = 0;
@@ -47,6 +48,8 @@ public class GameManager : MonoBehaviour
         feedbackAnimationManager = FeedbackAnimationManager.instance;
 
         decimalResourceCount = currentProps.resourceCount;
+
+        decimalGoldResourceCount = currentProps.goldResourceCount;
 
         Bomb.bombStrength = currentProps.bombStrengthLevel;
     }
@@ -73,8 +76,9 @@ public class GameManager : MonoBehaviour
     public void IncrementResources()
     {
         if(currentProps.resourceCount >= currentProps.GetMaxResourceCount())
+        {
             return;
-        
+        }
         decimalResourceCount += resourceIncrementRate;
 
         currentProps.resourceCount = (int)decimalResourceCount;
@@ -105,6 +109,8 @@ public class GameManager : MonoBehaviour
     {
         if(currentProps.resourceCount >= currentProps.GetMaxResourceCount())
         {
+            inGameUI.SetResLimitFeedbackActive(true);
+
             currentProps.resourceCount = currentProps.GetMaxResourceCount();
             inGameUI.HandlePlayerPropertyChange(currentProps);
 
@@ -123,11 +129,17 @@ public class GameManager : MonoBehaviour
     {
         this.playerInputManager.EnableInput();
     }
+
+    public void UpdateLevelProgress(float percentQuota)
+    {
+        this.inGameUI.SetLevelProgressBarQuota(percentQuota);
+    }
 }
 
 
 public struct PlayerProperties
 {
+    public int gameLevel;
     public int bombCount;
     public int resourceCount;
     public int goldResourceCount;
@@ -137,6 +149,8 @@ public struct PlayerProperties
     public int bombCountLevel;
 
     public int resourceCountLevel;
+
+    //--------Calibration needed here-----------
 
     public int GetMaxResourceCount()
     {
@@ -153,4 +167,20 @@ public struct PlayerProperties
           return 1 + ((float)bombStrengthLevel * 0.25f);
     }
 
+
+    public int GetBombStrengthUpgradeUprice()
+    {
+        return bombStrengthLevel * 50;
+    }
+
+    public int GetBombCountUpgradeUprice()
+    {
+        return bombCountLevel * 25;
+    }
+
+    public int GetResourceCountUpgradeUprice()
+    {
+        return resourceCountLevel * 25;
+    }
+    //---------------------------------------------
 }

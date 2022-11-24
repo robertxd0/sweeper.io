@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 5878470228035739161}
   - component: {fileID: 2155471122417398600}
   - component: {fileID: 1913509071096475183}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: HexagonTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
