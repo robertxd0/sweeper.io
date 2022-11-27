@@ -8,4 +8,5 @@ public class Constants
       public const string ANIMATOR_RES_LIMIT_REACHED_FEEDBACK = "ResLimitReached";
       public const string ANIMATOR_BOMB_CNT_LIMIT_REACHED_FEEDBACK = "BombCntLimitReached";
       public const string ANIMATOR_NOT_ENOUGH_RES_FEEDBACK = "NotEnoughRes";
+      public const string ANIMATOR_LEVEL_PROGRESS_ACQUIRED_TRG = "ProgressAcquired";
 }

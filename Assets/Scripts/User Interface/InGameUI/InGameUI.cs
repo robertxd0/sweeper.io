@@ -12,7 +12,7 @@ public class InGameUI : MonoBehaviour
     [SerializeField] private Slider levelProgressSlider;
 
     [SerializeField] private UpgradeShopUI upgradeShopUI;
-    
+
     [SerializeField] private Animator collectibleManagementAnimator;
 
     private Coroutine autoStopResFeedbackCoroutine;
@@ -28,7 +28,11 @@ public class InGameUI : MonoBehaviour
 
     public void SetLevelProgressBarQuota(float percent)
     {
-        this.levelProgressSlider.value = percent;
+        if (percent > 0.05f)
+        {
+            this.levelProgressSlider.value = percent;
+            this.collectibleManagementAnimator.SetTrigger(Constants.ANIMATOR_LEVEL_PROGRESS_ACQUIRED_TRG);
+        }
     }
 
 
@@ -40,7 +44,7 @@ public class InGameUI : MonoBehaviour
     public void EnableResLimitFeedback()
     {
         this.collectibleManagementAnimator.SetBool(Constants.ANIMATOR_RES_LIMIT_REACHED_FEEDBACK, true);
-        if(autoStopResFeedbackCoroutine != null)
+        if (autoStopResFeedbackCoroutine != null)
         {
             StopCoroutine(autoStopResFeedbackCoroutine);
         }
@@ -50,7 +54,7 @@ public class InGameUI : MonoBehaviour
     public void EnableBombCntLimitFeedback()
     {
         this.collectibleManagementAnimator.SetBool(Constants.ANIMATOR_BOMB_CNT_LIMIT_REACHED_FEEDBACK, true);
-        if(autoStopBombFeedbackCoroutine != null)
+        if (autoStopBombFeedbackCoroutine != null)
         {
             StopCoroutine(autoStopBombFeedbackCoroutine);
         }
@@ -60,7 +64,7 @@ public class InGameUI : MonoBehaviour
     public void EnableNotEnoughResFeedback()
     {
         this.collectibleManagementAnimator.SetBool(Constants.ANIMATOR_NOT_ENOUGH_RES_FEEDBACK, true);
-        if(autoStopNotEnoughResFeedbackCoroutine != null)
+        if (autoStopNotEnoughResFeedbackCoroutine != null)
         {
             StopCoroutine(autoStopNotEnoughResFeedbackCoroutine);
         }
@@ -70,12 +74,12 @@ public class InGameUI : MonoBehaviour
     private IEnumerator AutoStopFeedbackAnim(string animClip)
     {
         var end = Time.time + 0.25f;
-        while(Time.time < end)
+        while (Time.time < end)
         {
             yield return null;
         }
         this.collectibleManagementAnimator.SetBool(animClip, false);
     }
 
-    
+
 }
