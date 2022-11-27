@@ -31,6 +31,7 @@ public class Bomb : MonoBehaviour
     {
         this.meshRenderer.enabled = false;
         this.timer.SetActive(false);
+        //this.explosionFX.SetActive(true);
         this.explosionFX.Play(true);
         this.plate.TriggerPostExplosion();
     }
