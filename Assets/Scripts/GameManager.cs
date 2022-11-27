@@ -58,8 +58,15 @@ public class GameManager : MonoBehaviour
     //     Returns true if player has successfully bought. If player has not enough resources, it returns false.
     public bool IncrementBombs(int bombResourceCount)
     {
-        if(bombResourceCount > currentProps.resourceCount || currentProps.bombCount >= currentProps.GetMaxBombCount())
+        if(currentProps.bombCount >= currentProps.GetMaxBombCount())
         {
+            inGameUI.EnableBombCntLimitFeedback();
+            return false;
+        }
+
+        if(bombResourceCount > currentProps.resourceCount)
+        {
+            inGameUI.EnableNotEnoughResFeedback();
             return false;
         }
 
@@ -109,7 +116,7 @@ public class GameManager : MonoBehaviour
     {
         if(currentProps.resourceCount >= currentProps.GetMaxResourceCount())
         {
-            inGameUI.SetResLimitFeedbackActive(true);
+            inGameUI.EnableResLimitFeedback();
 
             currentProps.resourceCount = currentProps.GetMaxResourceCount();
             inGameUI.HandlePlayerPropertyChange(currentProps);
@@ -164,7 +171,7 @@ public struct PlayerProperties
 
     public float GetBombStrength()
     {
-          return 1 + ((float)bombStrengthLevel * 0.25f);
+          return ((float)bombStrengthLevel * 2.5f);
     }
 
 

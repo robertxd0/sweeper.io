@@ -1422,7 +1422,6 @@ GameObject:
   - component: {fileID: 350574479}
   - component: {fileID: 350574481}
   - component: {fileID: 350574480}
-  - component: {fileID: 350574482}
   m_Layer: 5
   m_Name: ResourceCounter
   m_TagString: Untagged
@@ -1481,7 +1480,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
+    rgba: 4278190313
   m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -1549,26 +1548,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 350574478}
   m_CullTransparentMesh: 1
---- !u!95 &350574482
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 350574478}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b84c77c6e7cceb04a91bfd1792e370ff, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &389158919
 GameObject:
   m_ObjectHideFlags: 0
@@ -2547,6 +2526,7 @@ GameObject:
   - component: {fileID: 544251239}
   - component: {fileID: 544251238}
   - component: {fileID: 544251242}
+  - component: {fileID: 544251243}
   m_Layer: 5
   m_Name: InGameUI
   m_TagString: Untagged
@@ -2662,7 +2642,27 @@ MonoBehaviour:
   goldResourceCount: {fileID: 117160832}
   levelProgressSlider: {fileID: 1526513843}
   upgradeShopUI: {fileID: 1883101919}
-  collectibleManagementAnimator: {fileID: 350574482}
+  collectibleManagementAnimator: {fileID: 544251243}
+--- !u!95 &544251243
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544251237}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 00cbd96e1132caa428b846d8eec43814, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &548977940
 GameObject:
   m_ObjectHideFlags: 0

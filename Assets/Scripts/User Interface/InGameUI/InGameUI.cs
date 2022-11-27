@@ -16,6 +16,8 @@ public class InGameUI : MonoBehaviour
     [SerializeField] private Animator collectibleManagementAnimator;
 
     private Coroutine autoStopResFeedbackCoroutine;
+    private Coroutine autoStopBombFeedbackCoroutine;
+    private Coroutine autoStopNotEnoughResFeedbackCoroutine;
 
     public void HandlePlayerPropertyChange(PlayerProperties props)
     {
@@ -35,23 +37,45 @@ public class InGameUI : MonoBehaviour
         this.upgradeShopUI.InitShop(props);
     }
 
-    public void SetResLimitFeedbackActive(bool active)
+    public void EnableResLimitFeedback()
     {
-        this.collectibleManagementAnimator.SetBool(Constants.ANIMATOR_RES_LIMIT_REACHED_FEEDBACK, active);
+        this.collectibleManagementAnimator.SetBool(Constants.ANIMATOR_RES_LIMIT_REACHED_FEEDBACK, true);
         if(autoStopResFeedbackCoroutine != null)
         {
             StopCoroutine(autoStopResFeedbackCoroutine);
         }
-        autoStopResFeedbackCoroutine = StartCoroutine(AutoStopResLimitFeedback());
+        autoStopResFeedbackCoroutine = StartCoroutine(AutoStopFeedbackAnim(Constants.ANIMATOR_RES_LIMIT_REACHED_FEEDBACK));
     }
 
-    private IEnumerator AutoStopResLimitFeedback()
+    public void EnableBombCntLimitFeedback()
+    {
+        this.collectibleManagementAnimator.SetBool(Constants.ANIMATOR_BOMB_CNT_LIMIT_REACHED_FEEDBACK, true);
+        if(autoStopBombFeedbackCoroutine != null)
+        {
+            StopCoroutine(autoStopBombFeedbackCoroutine);
+        }
+        autoStopBombFeedbackCoroutine = StartCoroutine(AutoStopFeedbackAnim(Constants.ANIMATOR_BOMB_CNT_LIMIT_REACHED_FEEDBACK));
+    }
+
+    public void EnableNotEnoughResFeedback()
+    {
+        this.collectibleManagementAnimator.SetBool(Constants.ANIMATOR_NOT_ENOUGH_RES_FEEDBACK, true);
+        if(autoStopNotEnoughResFeedbackCoroutine != null)
+        {
+            StopCoroutine(autoStopNotEnoughResFeedbackCoroutine);
+        }
+        autoStopNotEnoughResFeedbackCoroutine = StartCoroutine(AutoStopFeedbackAnim(Constants.ANIMATOR_NOT_ENOUGH_RES_FEEDBACK));
+    }
+
+    private IEnumerator AutoStopFeedbackAnim(string animClip)
     {
         var end = Time.time + 0.25f;
         while(Time.time < end)
         {
             yield return null;
         }
-        this.collectibleManagementAnimator.SetBool(Constants.ANIMATOR_RES_LIMIT_REACHED_FEEDBACK, false);
+        this.collectibleManagementAnimator.SetBool(animClip, false);
     }
+
+    
 }
