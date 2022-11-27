@@ -7,41 +7,46 @@ public class HexagonZoneManager : MonoBehaviour
 {
     public static HexagonZoneManager instance;
 
-    private Dictionary<int, List<HexagonPlate>> zones;
+    private Dictionary<int, List<HexagonTile>> zones;
 
     private GridFactory factory;
-    private Coroutine hexagonZoneCoroutine; // move to hexagonzonemanager when done testing
-    private List<HexagonPlate> recentlyAddedPlates; // move to hexagonzonemanager when done testing
+    private Coroutine hexagonZoneCoroutine;
+    private List<HexagonTile> recentlyAddedPlates;
 
+    private GameManager gameManager;
 
     private void Awake()
     {
         instance = this;
+
     }
     void Start()
     {
-        zones = new Dictionary<int, List<HexagonPlate>>();
+        zones = new Dictionary<int, List<HexagonTile>>();
         factory = GetComponent<GridFactory>();
+        gameManager = GameManager.instance;
     }
 
 
-    IEnumerator MarkHexagonZoneWithDelay(int playerId) ///move this to the hexagon zone manager
+    IEnumerator MarkHexagonZoneWithDelay(int playerId)
     {
         yield return new WaitForSeconds(0.25f);
         this.UpdateZone(playerId);
     }
 
-    public void AddHexagonsForPlayer(HexagonPlate[] hexagonPlates, int playerId)
+    public void AddHexagonsForPlayer(HexagonTile[] hexagonPlates, int playerId)
     {
         if (!zones.ContainsKey(playerId))
         {
-            List<HexagonPlate> hexagons = new List<HexagonPlate>();
+            List<HexagonTile> hexagons = new List<HexagonTile>();
             hexagons.AddRange(hexagonPlates);
-            zones.Add(playerId, hexagons);     
+            zones.Add(playerId, hexagons);
         }
         else
             zones[playerId].AddRange(hexagonPlates);
-        
+
+        float playerZonesQuota = (float)(zones[playerId].Count - factory.playerZoneCount) / ((factory.width * factory.depth) - factory.playerZoneCount);
+        this.gameManager.UpdateLevelProgress(playerZonesQuota); ;
 
         if (hexagonZoneCoroutine != null)
         {
@@ -55,27 +60,33 @@ public class HexagonZoneManager : MonoBehaviour
     {
         if (!zones.ContainsKey(playerId))
         {
-          return;
+            return;
         }
 
-        foreach (HexagonPlate plate in zones[playerId])
+        foreach (HexagonTile tile in zones[playerId])
         {
-            if (CheckBorderHexagon(plate))
+            if (tile.IsShopPlate())
             {
-                plate.SetBorderPlate();
+                continue;
+            }
+
+            if (CheckBorderHexagon(tile))
+            {
+                tile.SetBorderPlate();
             }
             else
             {
-                plate.UnsetBorderPlate();
+                tile.UnsetBorderPlate();
             }
         }
     }
 
-    bool CheckBorderHexagon(HexagonPlate plate)
+    bool CheckBorderHexagon(HexagonTile tile)
     {
         int layerMask = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
 
-        if(Physics.OverlapSphere(plate.transform.position, 1.5f, layerMask).Length > 0){
+        if (Physics.OverlapSphere(tile.transform.position, 1.5f, layerMask).Length > 0)
+        {
             return true;
         }
 

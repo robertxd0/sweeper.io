@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPooler
+public class ObjectPooler : IEnumerable
 {
 	private Stack<GameObject> objectPool =  new Stack<GameObject>();
 	private GameObject prefab;
@@ -14,7 +14,15 @@ public class ObjectPooler
 		this.ExpandPool(poolSize);
 	}
 
-	public GameObject GetObject()
+    public IEnumerator GetEnumerator()
+    {
+        foreach(GameObject obj in objectPool)
+		{
+			yield return obj;
+		}
+    }
+
+    public GameObject GetObject()
 	{
 		if(objectPool.Count == 0)
 		{

@@ -9,12 +9,12 @@ public class BombFactory : MonoBehaviour
 
     private void OnEnable()
     {
-        HexagonPlate.PlateTriggeredEvent.AddListener(PlateTriggeredEvent);
+        HexagonTile.TileTriggeredEvent.AddListener(PlateTriggeredEvent);
     }
 
     private void OnDisable()
     {
-        HexagonPlate.PlateTriggeredEvent.RemoveListener(PlateTriggeredEvent);
+        HexagonTile.TileTriggeredEvent.RemoveListener(PlateTriggeredEvent);
     }
 
     void Start()
@@ -22,7 +22,7 @@ public class BombFactory : MonoBehaviour
         bombHelper.InitHelper();
     }
 
-    void PlateTriggeredEvent(HexagonPlate plate)
+    void PlateTriggeredEvent(HexagonTile plate)
     {
         if(!plate.hasBomb)
         {

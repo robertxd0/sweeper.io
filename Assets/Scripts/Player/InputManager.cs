@@ -5,12 +5,14 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
+      [SerializeField] bool disableInput = false;
       [SerializeField] float turningSpeed = 5f;
       [SerializeField] float speed = 2f;
       [SerializeField] Animator animator;
       CharacterController controller;
       Vector2 initialTouchPos;
       Vector3 direction;
+
 
       private void Start()
       {
@@ -22,7 +24,20 @@ public class InputManager : MonoBehaviour
 
       void FixedUpdate()
       {
-            HandleInput();
+            if(!disableInput)
+            {
+                  HandleInput();
+            }
+      }
+
+      public void DisableInput()
+      {
+            this.disableInput = true;
+      }
+
+      public void EnableInput()
+      {
+            this.disableInput = false;
       }
 
       void HandleInput()

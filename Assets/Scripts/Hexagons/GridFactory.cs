@@ -7,10 +7,17 @@ using System.Linq;
 public class GridFactory : MonoBehaviour
 {
       [SerializeField] private HexagonHelper hexagonHelperInstance;
-      [SerializeField] private HexagonZoneManager hexagonZoneManager;
+      
+      [SerializeField] private GameObject bombShopPrefab;
+      [SerializeField] private GameObject upgradeShopPrefab;
+      [SerializeField] private GameObject player;
+ 
+      [SerializeField] private float playeZoneRadius = 5f;
 
       [SerializeField] internal int width = 5;
       [SerializeField] internal int depth = 5;
+
+      internal int playerZoneCount = 0;
 
 
       [Range(1f, 2f)]
@@ -18,9 +25,13 @@ public class GridFactory : MonoBehaviour
 
       private static GridFactory instance;
 
-      private readonly List<HexagonPlate> spawnedHexagons = new List<HexagonPlate>();
+      private readonly List<HexagonTile> spawnedHexagonTiles = new List<HexagonTile>();
 
       private List<Vector3> gridPoints;
+
+      private BombShop bombShop;
+
+      private UpgradeShop upgradeShop;
 
 
       public static GridFactory GetInstance()
@@ -28,9 +39,9 @@ public class GridFactory : MonoBehaviour
             return instance;
       }
 
-      public List<HexagonPlate> GetSpawnedPlates()
+      public List<HexagonTile> GetSpawnedPlates()
       {
-            return this.spawnedHexagons;
+            return this.spawnedHexagonTiles;
       }
 
       private void OnEnable()
@@ -49,7 +60,6 @@ public class GridFactory : MonoBehaviour
       void Start()
       {
             hexagonHelperInstance.InitHelper();
-            hexagonZoneManager = GetComponent<HexagonZoneManager>();
 
             GenerateGrid();
       }
@@ -58,24 +68,28 @@ public class GridFactory : MonoBehaviour
       {
             gridPoints = ComputeGridPoints().ToList();
 
-            if (spawnedHexagons.Count < gridPoints.Count)
+            if (spawnedHexagonTiles.Count < gridPoints.Count)
             {
                   SpawnHexagons();
             }
 
-            List<HexagonPlate> plates = new List<HexagonPlate>();
+            List<HexagonTile> tiles = new List<HexagonTile>();
 
             foreach (Vector3 pos in gridPoints)
             {
                   int index = gridPoints.IndexOf(pos);
-                  spawnedHexagons[index].transform.position = pos;
+                  spawnedHexagonTiles[index].transform.position = pos;
 
-                  if(spawnedHexagons[index].isTriggered)
+                  if(spawnedHexagonTiles[index].isTriggered)
                   {
-                        plates.Add(spawnedHexagons[index]);
+                        tiles.Add(spawnedHexagonTiles[index]);
                   }
             }
 
+            Physics.SyncTransforms();
+            this.bombShop.Init();
+            this.upgradeShop.Init();
+            this.SetPlayerZone(player.transform);
       }
 
       void SpawnHexagons()
@@ -85,11 +99,40 @@ public class GridFactory : MonoBehaviour
                   GameObject hexagon = hexagonHelperInstance.SpawnHexagon();
                   hexagon.name = "HexagonPlate no. " + i;
                   hexagon.transform.SetParent(transform);
-                  HexagonPlate plate = hexagon.GetComponent<HexagonPlate>();
-                  spawnedHexagons.Add(plate);
+                  HexagonTile tile = hexagon.GetComponent<HexagonTile>();
+                  spawnedHexagonTiles.Add(tile);
+
+                  if(i % 8 == 1 && this.bombShop == null) //ok, but not ok. but ok for now.
+                  {
+                       this.bombShop = PlaceBombFactory(tile);
+                       continue;
+                  }
+
+                  if(i % 6 == 1 && this.upgradeShop == null)
+                  {
+                        this.upgradeShop = PlaceUpgradeShop(tile);
+                        continue; 
+                  }
             }
       }
 
+      BombShop PlaceBombFactory(HexagonTile tile)
+      {
+            Vector3 bombShopPos = new Vector3(tile.transform.position.x, tile.transform.position.y + 1.5f, tile.transform.position.z);
+            GameObject bombShopGO = GameObject.Instantiate(bombShopPrefab, bombShopPos, bombShopPrefab.transform.rotation);
+            bombShopGO.transform.parent = tile.transform;
+
+            return bombShopGO.GetComponent<BombShop>();
+      }
+
+      UpgradeShop PlaceUpgradeShop(HexagonTile tile)
+      {
+            Vector3 upgradeShopPos = new Vector3(tile.transform.position.x, tile.transform.position.y + 1.5f, tile.transform.position.z);
+            GameObject upgradeShopGO = GameObject.Instantiate(upgradeShopPrefab, upgradeShopPos, upgradeShopPrefab.transform.rotation);
+            upgradeShopGO.transform.parent = tile.transform;
+
+            return upgradeShopGO.GetComponent<UpgradeShop>();
+      }
 
       IEnumerable<Vector3> ComputeGridPoints()
       {
@@ -105,6 +148,21 @@ public class GridFactory : MonoBehaviour
 
                         yield return pos;
                   }
+            }
+      }
+
+      void SetPlayerZone(Transform player)
+      {
+            Collider[] adjacentHexagons = Physics.OverlapSphere(player.position, playeZoneRadius);
+            
+            foreach(Collider col in adjacentHexagons)
+            {
+                  HexagonTile tileObj = col.GetComponent<HexagonTile>();
+                  if(tileObj != null)
+                  {
+                        tileObj.InitPlateAsPlayerZone();
+                        this.playerZoneCount++;
+                  }     
             }
       }
 }

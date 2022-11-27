@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
-{
-    public static float bombStrength = 2f;
+{    
+    public static float bombStrength = 1f;
 
     [SerializeField] private ParticleSystem explosionFX;
     
     [SerializeField] private GameObject timer;
-
     
-    private HexagonPlate plate;
+    private HexagonTile plate;
     private MeshRenderer meshRenderer;
 
     private void Start() {
@@ -22,7 +21,7 @@ public class Bomb : MonoBehaviour
         timer.SetActive(true);
     }
 
-    public void SetPlate(HexagonPlate plate)
+    public void SetPlate(HexagonTile plate)
     {
         this.plate = plate;
         this.plate.SetBomb(this);
@@ -43,10 +42,5 @@ public class Bomb : MonoBehaviour
         this.meshRenderer.enabled = true;
 
         BombHelper.bombPool.PoolObject(this.gameObject);
-    }
-
-    void Update()
-    {
-        
     }
 }

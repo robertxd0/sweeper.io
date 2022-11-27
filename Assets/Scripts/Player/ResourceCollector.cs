@@ -7,41 +7,88 @@ public class ResourceCollector : MonoBehaviour
     public static ResourceCollector instance;
     public Collider collectorCollider;
 
-    private List<ParticleSystem> engagedParticleSystems = new List<ParticleSystem>();
+    public ParticleSystem.MinMaxCurve uncollectedParticleCurve;
 
-    private void Awake() {
+    private GameManager manager;
+    private List<ParticleSystem> uncollectedParticleSystems = new List<ParticleSystem>();
+
+    private Coroutine collectorStoppedCoroutine;
+
+    private void Awake()
+    {
         instance = this;
     }
-    
-    private void OnDisable() {
+
+    private void OnDisable()
+    {
         instance = null;
     }
-
-    public void Collect(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem)
+    private void Start()
     {
-        engagedParticleSystems.Add(originSystem);
-        StartCoroutine(CollectorCoroutine(particles));
+        manager = GameManager.instance;
     }
 
-    IEnumerator CollectorCoroutine(List<ParticleSystem.Particle> particles)
+    public void CollectRoutine(List<ParticleSystem.Particle> particles, ref ParticleSystem originSystem, ResourceType type)
     {
-        var end = Time.time + 0.5f;
-        while(Time.time < end)
+        if (type == ResourceType.STANDARD_RES && manager.ResourceLimitReached())
         {
-            for(int i = 0; i < particles.Count; i++)
+            if (uncollectedParticleSystems.Contains(originSystem))
             {
-                ParticleSystem.Particle p = particles[i];
-                p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
-                if(p.remainingLifetime > 0.5f) //adapt lifetime based on distance.
-                    p.remainingLifetime = 0.5f;
-                particles[i] = p;
+                bool hasCollectableParticles = false;
+                for (int i = 0; i < particles.Count; i++)
+                {
+                    ParticleSystem.Particle p = particles[i];
+                    if (p.remainingLifetime < 1f)
+                    {
+                        p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
+                        hasCollectableParticles = true;
+                    }
+                    particles[i] = p;
+                }
+
+                if (originSystem.GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
+                {
+                    originSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
+                }
+
+                if (!hasCollectableParticles)
+                {
+                    uncollectedParticleSystems.Remove(originSystem);
+                }
             }
-            if(engagedParticleSystems[engagedParticleSystems.Count - 1].GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
-            {
-                engagedParticleSystems[engagedParticleSystems.Count - 1].SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
-            }
-            yield return null;
+            return;
         }
-        engagedParticleSystems.Remove(engagedParticleSystems[engagedParticleSystems.Count - 1]);
+
+        for (int i = 0; i < particles.Count; i++)
+        {
+            ParticleSystem.Particle p = particles[i];
+            p.position = Vector3.Lerp(p.position, transform.position, Time.deltaTime * 5f);
+            if (p.remainingLifetime > 0.35f) //TODO: adapt lifetime based on particle distance.
+            {
+                p.remainingLifetime = 0.35f;
+                if (type == ResourceType.GOLD_RES) manager.IncrementGoldResources();
+                else if (type == ResourceType.STANDARD_RES) manager.IncrementResources();
+            }
+            else
+            {
+                if (!uncollectedParticleSystems.Contains(originSystem))
+                    uncollectedParticleSystems.Add(originSystem);
+            }
+
+            particles[i] = p;
+        }
+
+        if (originSystem.particleCount == 0)
+        {
+            if (uncollectedParticleSystems.Contains(originSystem))
+            {
+                uncollectedParticleSystems.Remove(originSystem);
+            }
+        }
+
+        if (originSystem.GetSafeTriggerParticlesSize(ParticleSystemTriggerEventType.Inside) == particles.Count) //not good. but it works (insert flushed emoji here)
+        {
+            originSystem.SetTriggerParticles(ParticleSystemTriggerEventType.Inside, particles);
+        }
     }
 }
