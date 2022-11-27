@@ -36,10 +36,10 @@ public class GameManager : MonoBehaviour
         //load from playerprefs
         currentProps = new PlayerProperties();
         currentProps.gameLevel = 1;
-        currentProps.bombCount = 10;
-        currentProps.resourceCount = 110;
+        currentProps.bombCount = 5;
+        currentProps.resourceCount = 0;
         currentProps.goldResourceCount = 0;
-        currentProps.bombStrengthLevel = 1;
+        currentProps.bombStrengthLevel = 2;
         currentProps.bombCountLevel = 2;
         currentProps.resourceCountLevel = 1;
 
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
 
         decimalGoldResourceCount = currentProps.goldResourceCount;
 
-        Bomb.bombStrength = currentProps.bombStrengthLevel;
+        Bomb.bombStrength = currentProps.GetBombStrength();
     }
     //
     // Summary:
@@ -171,7 +171,7 @@ public struct PlayerProperties
 
     public float GetBombStrength()
     {
-          return ((float)bombStrengthLevel * 2.5f);
+          return ((float)bombStrengthLevel * 1.5f);
     }
 
 
