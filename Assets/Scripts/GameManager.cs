@@ -20,8 +20,6 @@ public class GameManager : MonoBehaviour
 
     private PlayerProperties currentProps;
 
-    private float decimalResourceCount = 0f;
-    private float decimalGoldResourceCount = 0f;
 
     private void Awake() {
         instance = this;
@@ -38,7 +36,7 @@ public class GameManager : MonoBehaviour
         currentProps.gameLevel = 1;
         currentProps.bombCount = 5;
         currentProps.resourceCount = 0;
-        currentProps.goldResourceCount = 0;
+        currentProps.goldResourceCount = 250;
         currentProps.bombStrengthLevel = 1;
         currentProps.bombCountLevel = 1;
         currentProps.resourceCountLevel = 1;
@@ -46,10 +44,6 @@ public class GameManager : MonoBehaviour
         inGameUI.HandlePlayerPropertyChange(currentProps);
 
         feedbackAnimationManager = FeedbackAnimationManager.instance;
-
-        decimalResourceCount = currentProps.resourceCount;
-
-        decimalGoldResourceCount = currentProps.goldResourceCount;
 
         Bomb.bombStrength = currentProps.GetBombStrength();
     }
@@ -72,8 +66,6 @@ public class GameManager : MonoBehaviour
 
         currentProps.resourceCount -= bombResourceCount;
         currentProps.bombCount++;
-
-        decimalResourceCount = (float)currentProps.resourceCount;
         
         feedbackAnimationManager.ExecFeedbackFX(FXFeedbackTypes.BOMB_PURCHASE_SUCCESSFUL, playerInputManager.transform);
         inGameUI.HandlePlayerPropertyChange(currentProps);
@@ -86,18 +78,15 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        decimalResourceCount += resourceIncrementRate;
 
-        currentProps.resourceCount = (int)decimalResourceCount;
+        currentProps.resourceCount += resourceIncrementRate;
         inGameUI.HandlePlayerPropertyChange(currentProps);
     }
 
 
     public void IncrementGoldResources()
     {
-        decimalGoldResourceCount += goldResourceIncrementRate;
-
-        currentProps.goldResourceCount = (int)decimalGoldResourceCount;
+        currentProps.goldResourceCount += goldResourceIncrementRate;
         inGameUI.HandlePlayerPropertyChange(currentProps);
     }
 
@@ -141,6 +130,16 @@ public class GameManager : MonoBehaviour
     {
         this.inGameUI.SetLevelProgressBarQuota(percentQuota);
     }
+
+    public void Upgrade(PlayerProperties newProps)
+    {
+        this.currentProps = newProps;
+    }
+
+    public PlayerProperties GetPlayerProperties()
+    {
+        return this.currentProps;
+    }
 }
 
 
@@ -148,8 +147,8 @@ public struct PlayerProperties
 {
     public int gameLevel;
     public int bombCount;
-    public int resourceCount;
-    public int goldResourceCount;
+    public float resourceCount;
+    public float goldResourceCount;
 
     public int bombStrengthLevel;
 
@@ -171,7 +170,7 @@ public struct PlayerProperties
 
     public float GetBombStrength()
     {
-          return ((float)bombStrengthLevel * 1.5f);
+          return ((float)bombStrengthLevel * ((bombStrengthLevel < 2 ) ? 1.75f : 1.15f));
     }
 
 

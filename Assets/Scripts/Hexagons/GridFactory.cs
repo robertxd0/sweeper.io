@@ -102,7 +102,7 @@ public class GridFactory : MonoBehaviour
                   HexagonTile tile = hexagon.GetComponent<HexagonTile>();
                   spawnedHexagonTiles.Add(tile);
 
-                  if(i % 8 == 1 && this.bombShop == null) //ok, but not ok. but ok for now.
+                  if(i % 6 == 1 && this.bombShop == null) //ok, but not ok. but ok for now.
                   {
                        this.bombShop = PlaceBombFactory(tile);
                        continue;
@@ -137,9 +137,9 @@ public class GridFactory : MonoBehaviour
       IEnumerable<Vector3> ComputeGridPoints()
       {
             Vector3 origin = transform.position;
-            for (int x = 0; x < width; x++)
+            for (int x = 0; x < width + (playerZoneCount / 2); x++)
             {
-                  for (int z = 0; z < depth; z++)
+                  for (int z = 0; z < depth + (playerZoneCount / 2); z++)
                   {
                         var pos = new Vector3(
                             origin.x + (float)hexagonHelperInstance.hexagonWidth * (x * spread) + ((z % 2 == 0) ? ((float)hexagonHelperInstance.hexagonWidth / 2f) + (spread - 1f) : 0),

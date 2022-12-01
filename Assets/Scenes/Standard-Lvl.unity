@@ -1235,7 +1235,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 273128965}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1883101919}
+        m_TargetAssemblyTypeName: UpgradeShopUI, Assembly-CSharp
+        m_MethodName: UpgradeBombCount
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &273128965
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4003,9 +4015,9 @@ MonoBehaviour:
   bombShopPrefab: {fileID: 1158166198081733813, guid: 56d0c0e6a83a55a4ebb30449ad720320, type: 3}
   upgradeShopPrefab: {fileID: 1531360443445353298, guid: 3f98bdb97e2a69240abb619aff67b0e5, type: 3}
   player: {fileID: 2614242617738387304}
-  playeZoneRadius: 12
-  width: 5
-  depth: 5
+  playeZoneRadius: 7
+  width: 7
+  depth: 10
   spread: 1.225
 --- !u!4 &1031781283
 Transform:
@@ -4562,7 +4574,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1158783817}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1883101919}
+        m_TargetAssemblyTypeName: UpgradeShopUI, Assembly-CSharp
+        m_MethodName: UpgradeResourceCount
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1158783817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5166,7 +5190,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1227476327}
   m_LocalRotation: {x: 0.3794095, y: -0.12059052, z: 0.049950227, w: 0.91597563}
-  m_LocalPosition: {x: 11.941344, y: 25.665047, z: -11.441345}
+  m_LocalPosition: {x: 8.941344, y: 25.665047, z: -16.441345}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5733,7 +5757,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1391954883}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1883101919}
+        m_TargetAssemblyTypeName: UpgradeShopUI, Assembly-CSharp
+        m_MethodName: UpgradeBombRadius
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1391954883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6575,7 +6611,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1695695504}
   m_LocalRotation: {x: 0.37940946, y: -0.120590515, z: 0.049950223, w: 0.9159756}
-  m_LocalPosition: {x: 7, y: 2.330526, z: 7}
+  m_LocalPosition: {x: 4, y: 2.330526, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7001,7 +7037,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inGameUI: {fileID: 544251242}
   playerInputManager: {fileID: 2614242617738387306}
-  resourceIncrementRate: 0.7
+  resourceIncrementRate: 0.8
   goldResourceIncrementRate: 0.65
 --- !u!4 &1787324049
 Transform:
@@ -8434,7 +8470,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2614242617738387304}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 7, y: 1.5, z: 7}
+  m_LocalPosition: {x: 4, y: 1.5, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

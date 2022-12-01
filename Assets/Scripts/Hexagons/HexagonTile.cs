@@ -106,7 +106,9 @@ public class HexagonTile : MonoBehaviour
             }
         }
 
+        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
         this.GetComponent<MeshRenderer>().material = bombShopPlateLook;
+        this.resource.gameObject.SetActive(false);
         this.isShopTile = true;
     }
 
@@ -119,6 +121,8 @@ public class HexagonTile : MonoBehaviour
     {
         this.upgradeShopInstance = upgradeShopInstance;
         this.GetComponent<MeshRenderer>().material = upgradeShopPlateLook;
+        this.resource.gameObject.SetActive(false);
+        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
 
         this.isUpgradeShopTile = true;
     }
@@ -135,10 +139,13 @@ public class HexagonTile : MonoBehaviour
 
     public void SetResource(Resource resourcePrefab)
     {
-        resourcePrefab.gameObject.transform.SetParent(transform);
-        resourcePrefab.gameObject.transform.localPosition = new Vector3(0f, 0f, 1.5f);
+        if(!(this.isUpgradeShopTile && this.isShopTile))
+        {
+            resourcePrefab.gameObject.transform.SetParent(transform);
+            resourcePrefab.gameObject.transform.localPosition = new Vector3(0f, 0f, 1.5f);
 
-        this.resource = resourcePrefab;
+            this.resource = resourcePrefab;
+        }
     }
 
     private void UnsetResource()

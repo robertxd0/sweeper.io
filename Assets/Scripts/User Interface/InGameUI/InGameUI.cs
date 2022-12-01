@@ -22,8 +22,8 @@ public class InGameUI : MonoBehaviour
     public void HandlePlayerPropertyChange(PlayerProperties props)
     {
         this.bombCount.text = props.bombCount.ToString() + "/" + props.GetMaxBombCount().ToString();
-        this.resourceCount.text = props.resourceCount.ToString() + "/" + props.GetMaxResourceCount().ToString();
-        this.goldResourceCount.text = props.goldResourceCount.ToString();
+        this.resourceCount.text = ((int)props.resourceCount).ToString() + "/" + props.GetMaxResourceCount().ToString();
+        this.goldResourceCount.text = ((int)props.goldResourceCount).ToString();
     }
 
     public void SetLevelProgressBarQuota(float percent)
@@ -38,7 +38,7 @@ public class InGameUI : MonoBehaviour
 
     public void TriggerUpgradeShop(PlayerProperties props)
     {
-        this.upgradeShopUI.InitShop(props);
+        this.upgradeShopUI.InitShop(props, this);
     }
 
     public void EnableResLimitFeedback()
