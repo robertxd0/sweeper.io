@@ -170,7 +170,7 @@ public struct PlayerProperties
 
     public float GetBombStrength()
     {
-          return ((float)bombStrengthLevel * ((bombStrengthLevel < 2 ) ? 1.75f : 1.15f));
+          return ((float)bombStrengthLevel *  2.5f);
     }
 
 
