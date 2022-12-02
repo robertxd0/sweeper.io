@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
     
     [Range(0f, 1f)]
     [SerializeField] private float goldResourceIncrementRate = 0.1f;
+
+    [SerializeField] private AnimationCurve bombStrengthSkillProgress;
     
     private FeedbackAnimationManager feedbackAnimationManager;
 
@@ -45,7 +47,7 @@ public class GameManager : MonoBehaviour
 
         feedbackAnimationManager = FeedbackAnimationManager.instance;
 
-        Bomb.bombStrength = currentProps.GetBombStrength();
+        Bomb.bombStrength = currentProps.GetBombStrength(bombStrengthSkillProgress);
     }
     //
     // Summary:
@@ -168,9 +170,9 @@ public struct PlayerProperties
         return (int)((float)bombCountLevel * 0.05f * 100f);
     }
 
-    public float GetBombStrength()
+    public float GetBombStrength(AnimationCurve predefinedStrengthProgress)
     {
-          return ((float)bombStrengthLevel *  2.5f);
+          return predefinedStrengthProgress.Evaluate((float)bombStrengthLevel / predefinedStrengthProgress[predefinedStrengthProgress.length - 1].time);
     }
 
 
