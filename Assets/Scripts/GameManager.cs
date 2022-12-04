@@ -172,7 +172,7 @@ public struct PlayerProperties
 
     public float GetBombStrength(AnimationCurve predefinedStrengthProgress)
     {
-          return predefinedStrengthProgress.Evaluate((float)bombStrengthLevel / predefinedStrengthProgress[predefinedStrengthProgress.length - 1].time);
+          return predefinedStrengthProgress.Evaluate((float)bombStrengthLevel-1 / predefinedStrengthProgress[predefinedStrengthProgress.length - 1].time);
     }
 
 
