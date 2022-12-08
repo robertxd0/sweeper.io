@@ -178,7 +178,7 @@ public struct PlayerProperties
 
     public int GetBombStrengthUpgradeUprice()
     {
-        return bombStrengthLevel * 50;
+        return bombStrengthLevel * 250;
     }
 
     public int GetBombCountUpgradeUprice()
