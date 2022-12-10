@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 4128382499364204}
   - component: {fileID: 7448527081895366247}
   m_Layer: 0
-  m_Name: RockCollection
+  m_Name: RockCollection_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -142,7 +142,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1949591130436844729}
-  m_Mesh: {fileID: -3565981541314608100, guid: 761abdc13aff40949b1cf7547c137498, type: 3}
+  m_Mesh: {fileID: -3068730180983956843, guid: 12e012fd2773ef040bb443734c46ad6d, type: 3}
 --- !u!23 &4128382499364204
 MeshRenderer:
   m_ObjectHideFlags: 0

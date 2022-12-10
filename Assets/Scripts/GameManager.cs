@@ -100,7 +100,14 @@ public class GameManager : MonoBehaviour
 
     public bool HasBombs()
     {
-        return currentProps.bombCount > 0;
+        bool hasBombs =  currentProps.bombCount > 0;
+
+        if(!hasBombs)
+        {
+            inGameUI.EnableNotEnoughBombsFeedback();
+        }
+
+        return hasBombs;
     }
 
     public bool ResourceLimitReached()

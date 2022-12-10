@@ -65,6 +65,13 @@ public class HexagonTile : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other) {
+        if(borderPlate && other.tag == Constants.TAG_PLAYER)
+        {
+            manager.HasBombs(); //(not ok) used for ui animation
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (isShopTile)
@@ -199,7 +206,18 @@ public class HexagonTile : MonoBehaviour
         this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
 
         int layer = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
-        this.adjacentPlatesCol = Physics.OverlapSphere(transform.position, Bomb.bombStrength, layer);
+        float radius = Bomb.bombStrength;
+
+        this.adjacentPlatesCol = Physics.OverlapSphere(transform.position, radius, layer);
+
+        //failsafe
+        int tryCount = 0;
+        while(adjacentPlatesCol.Length < 1 && tryCount < 15)
+        {
+            radius += 0.5f;
+            tryCount++;
+            this.adjacentPlatesCol = Physics.OverlapSphere(transform.position, radius, layer);
+        }
 
         this.adjacentPlatesObj = new HexagonTile[adjacentPlatesCol.Length];
 

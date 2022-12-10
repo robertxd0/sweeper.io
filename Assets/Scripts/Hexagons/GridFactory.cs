@@ -6,6 +6,18 @@ using System.Linq;
 //this provides... well the hexagons for the grid 🐱‍👤.
 public class GridFactory : MonoBehaviour
 {
+    public static Vector3 gridBoundsMin
+    {
+        get
+        {
+            Vector3 origin = instance.transform.position;
+            
+            origin.x -= (float)instance.hexagonHelperInstance.hexagonWidth/2f;
+
+            return origin;
+        }
+    }
+
     [SerializeField] private HexagonHelper hexagonHelperInstance;
 
     [SerializeField] private GameObject bombShopPrefab;
