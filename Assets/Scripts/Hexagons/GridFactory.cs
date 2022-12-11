@@ -13,6 +13,20 @@ public class GridFactory : MonoBehaviour
             Vector3 origin = instance.transform.position;
             
             origin.x -= (float)instance.hexagonHelperInstance.hexagonWidth/2f;
+            origin.z -= (float)instance.hexagonHelperInstance.hexagonDepth;
+
+            return origin;
+        }
+    }
+
+    public static Vector3 gridBoundsMax
+    {
+        get
+        {
+            Vector3 origin = instance.transform.position;
+            
+            origin.x += (float)(instance.hexagonHelperInstance.hexagonWidth * instance.spread * instance.width);
+            origin.z += (float)((instance.hexagonHelperInstance.hexagonDepth * 0.7f) * instance.depth);
 
             return origin;
         }
@@ -72,11 +86,45 @@ public class GridFactory : MonoBehaviour
         instance = null;
     }
 
-    void Start()
+    void Awake()
     {
         hexagonHelperInstance.InitHelper();
+    }
 
+    void Start()
+    {
         GenerateGrid();
+        GenerateBounds();
+    }
+
+    void GenerateBounds()
+    {
+        GameObject boundsLeft = new GameObject("BoundsLeft", typeof(BoxCollider));
+        GameObject boundsRight = new GameObject("BoundsRight", typeof(BoxCollider));
+        GameObject boundsUp = new GameObject("BoundsUp", typeof(BoxCollider));
+        GameObject boundsDown = new GameObject("BoundsDown", typeof(BoxCollider));
+
+        boundsLeft.transform.SetParent(transform);
+        boundsRight.transform.SetParent(transform);
+        boundsUp.transform.SetParent(transform);
+        boundsDown.transform.SetParent(transform);
+
+        boundsLeft.transform.position = new Vector3(gridBoundsMin.x, 0f, Mathf.Abs(gridBoundsMin.z - gridBoundsMax.z) * 0.5f);
+        BoxCollider colliderLeft = boundsLeft.GetComponent<BoxCollider>();
+        colliderLeft.size = new Vector3(2f, 10f, Mathf.Abs(gridBoundsMax.z  - gridBoundsMin.z) + 2f);
+
+        boundsRight.transform.position = new Vector3(gridBoundsMax.x, 0f, Mathf.Abs(gridBoundsMin.z - gridBoundsMax.z) * 0.5f);
+        BoxCollider colliderRight = boundsRight.GetComponent<BoxCollider>();
+        colliderRight.size = new Vector3(2f, 10f, Mathf.Abs(gridBoundsMax.z  - gridBoundsMin.z) + 2f);
+    
+        boundsUp.transform.position = new Vector3(Mathf.Abs(gridBoundsMin.x - gridBoundsMax.x) * 0.5f, 0f, gridBoundsMax.z);
+        BoxCollider colliderUp = boundsUp.GetComponent<BoxCollider>();
+        colliderUp.size = new Vector3(Mathf.Abs(gridBoundsMax.x - gridBoundsMin.x) + 2f, 10f, 2f);
+        
+        boundsDown.transform.position = new Vector3(Mathf.Abs(gridBoundsMin.x - gridBoundsMax.x) * 0.5f, 0f, gridBoundsMin.z);
+        BoxCollider colliderDown = boundsDown.GetComponent<BoxCollider>();
+        colliderDown.size = new Vector3(Mathf.Abs(gridBoundsMax.x - gridBoundsMin.x) + 2f, 10f, 2f);
+
     }
 
     void GenerateGrid()
