@@ -37,7 +37,7 @@ public class GridFactory : MonoBehaviour
     [SerializeField] private GameObject upgradeShopPrefab;
     [SerializeField] private GameObject player;
 
-    [SerializeField] private float playeZoneRadius = 5f;
+    [SerializeField] private float playerZoneRadius = 5f;
 
     internal int playerZoneCount = 0;
 
@@ -224,15 +224,15 @@ public class GridFactory : MonoBehaviour
 
     void SetPlayerZone(Transform player)
     {
-        Collider[] adjacentHexagons = Physics.OverlapSphere(player.position, playeZoneRadius);
+        Collider[] adjacentHexagons = Physics.OverlapSphere(player.position, playerZoneRadius);
 
         foreach (Collider col in adjacentHexagons)
         {
             HexagonTile tileObj = col.GetComponent<HexagonTile>();
             if (tileObj != null)
             {
-                tileObj.InitPlateAsPlayerZone();
                 this.playerZoneCount++;
+                tileObj.InitPlateAsPlayerZone();
             }
         }
     }

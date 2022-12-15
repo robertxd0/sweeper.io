@@ -168,15 +168,18 @@ public class HexagonTile : MonoBehaviour
 
     public void SetBorderPlate()
     {
-        this.borderPlate = true;
-        this.bomb = null;
-        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES); //it still is a triggered plate
-        this.GetComponent<MeshRenderer>().material = borderPlateLook;
-
-        if (this.resource != null && this.resource.gameObject.activeInHierarchy)
+        if(!(this.isShopTile || this.isUpgradeShopTile))
         {
-            resource.Explode();
-            UnsetResource();
+            this.borderPlate = true;
+            this.bomb = null;
+            this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES); //it still is a triggered plate
+            this.GetComponent<MeshRenderer>().material = borderPlateLook;
+
+            if (this.resource != null && this.resource.gameObject.activeInHierarchy)
+            {
+                resource.Explode();
+                UnsetResource();
+            }
         }
     }
 
