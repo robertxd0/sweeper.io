@@ -6642,7 +6642,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inGameUI: {fileID: 544251242}
   playerInputManager: {fileID: 2614242617738387306}
-  resourceIncrementRate: 0.8
+  resourceIncrementRate: 0.85
   goldResourceIncrementRate: 0.75
   bombStrengthSkillProgress:
     serializedVersion: 2
