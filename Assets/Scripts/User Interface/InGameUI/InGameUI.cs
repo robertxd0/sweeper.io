@@ -18,6 +18,8 @@ public class InGameUI : MonoBehaviour
     [SerializeField] private UpgradeShopUI upgradeShopUI;
 
     [SerializeField] private Animator collectibleManagementAnimator;
+
+    [SerializeField] private GameObject nextLevelDialogue;
     
 
     private Coroutine autoStopResFeedbackCoroutine;
@@ -44,10 +46,19 @@ public class InGameUI : MonoBehaviour
         }
     }
 
-
     public void TriggerUpgradeShop(PlayerProperties props)
     {
         this.upgradeShopUI.InitShop(props, this);
+    }
+
+    public void ShowNextLevelDialog()
+    {
+        this.nextLevelDialogue.SetActive(true);
+    }
+
+    public void NextLevelButtonClicked()
+    {
+        GameManager.instance.LoadNextLevel();
     }
 
     public void EnableResLimitFeedback()

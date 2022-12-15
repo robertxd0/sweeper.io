@@ -31,7 +31,6 @@ public class GridFactory : MonoBehaviour
             return origin;
         }
     }
-
     [SerializeField] private HexagonHelper hexagonHelperInstance;
 
     [SerializeField] private GameObject bombShopPrefab;
@@ -39,9 +38,6 @@ public class GridFactory : MonoBehaviour
     [SerializeField] private GameObject player;
 
     [SerializeField] private float playeZoneRadius = 5f;
-
-    [SerializeField] internal int width = 5;
-    [SerializeField] internal int depth = 5;
 
     internal int playerZoneCount = 0;
 
@@ -51,6 +47,10 @@ public class GridFactory : MonoBehaviour
 
     [SerializeField] Transform bombShopPlacementPoint;
     [SerializeField] Transform upgradeShopPlacementPoint;
+    
+    
+    internal int width = 5;
+    internal int depth = 5;
 
     private static GridFactory instance;
 
@@ -66,11 +66,6 @@ public class GridFactory : MonoBehaviour
     public static GridFactory GetInstance()
     {
         return instance;
-    }
-
-    public List<HexagonTile> GetSpawnedPlates()
-    {
-        return this.spawnedHexagonTiles;
     }
 
     private void OnEnable()
@@ -91,11 +86,15 @@ public class GridFactory : MonoBehaviour
         hexagonHelperInstance.InitHelper();
     }
 
-    void Start()
+    public void InitGrid(Vector2Int dimensions)
     {
+        this.width = dimensions.x;
+        this.depth = dimensions.y;
+
         GenerateGrid();
         GenerateBounds();
     }
+
 
     void GenerateBounds()
     {
@@ -177,6 +176,7 @@ public class GridFactory : MonoBehaviour
 
     void SpawnHexagons()
     {
+        
         for (int i = 0; i < gridPoints.Count; i++)
         {
             GameObject hexagon = hexagonHelperInstance.SpawnHexagon();
