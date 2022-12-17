@@ -46,6 +46,7 @@ public class HexagonZoneManager : MonoBehaviour
             zones[playerId].AddRange(hexagonPlates);
 
         float playerZonesQuota = (float)(zones[playerId].Count - factory.playerZoneCount) / ((factory.width * factory.depth) - factory.playerZoneCount);
+
         this.gameManager.UpdateLevelProgress(playerZonesQuota); ;
 
         if (hexagonZoneCoroutine != null)
