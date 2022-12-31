@@ -108,21 +108,21 @@ public class GridFactory : MonoBehaviour
         boundsUp.transform.SetParent(transform);
         boundsDown.transform.SetParent(transform);
 
-        boundsLeft.transform.position = new Vector3(gridBoundsMin.x, 0f, Mathf.Abs(gridBoundsMin.z - gridBoundsMax.z) * 0.5f);
+        boundsLeft.transform.position = new Vector3(gridBoundsMin.x - 1f, 0f, Mathf.Abs(gridBoundsMin.z - gridBoundsMax.z) * 0.5f);
         BoxCollider colliderLeft = boundsLeft.GetComponent<BoxCollider>();
-        colliderLeft.size = new Vector3(2f, 10f, Mathf.Abs(gridBoundsMax.z  - gridBoundsMin.z) + 2f);
+        colliderLeft.size = new Vector3(2f, 10f, Mathf.Abs(gridBoundsMax.z  - gridBoundsMin.z) + 5f);
 
-        boundsRight.transform.position = new Vector3(gridBoundsMax.x, 0f, Mathf.Abs(gridBoundsMin.z - gridBoundsMax.z) * 0.5f);
+        boundsRight.transform.position = new Vector3(gridBoundsMax.x + 1f, 0f, Mathf.Abs(gridBoundsMin.z - gridBoundsMax.z) * 0.5f);
         BoxCollider colliderRight = boundsRight.GetComponent<BoxCollider>();
-        colliderRight.size = new Vector3(2f, 10f, Mathf.Abs(gridBoundsMax.z  - gridBoundsMin.z) + 2f);
+        colliderRight.size = new Vector3(2f, 10f, Mathf.Abs(gridBoundsMax.z  - gridBoundsMin.z) + 5f);
     
-        boundsUp.transform.position = new Vector3(Mathf.Abs(gridBoundsMin.x - gridBoundsMax.x) * 0.5f, 0f, gridBoundsMax.z);
+        boundsUp.transform.position = new Vector3(Mathf.Abs(gridBoundsMin.x - gridBoundsMax.x) * 0.5f, 0f, gridBoundsMax.z + 1f);
         BoxCollider colliderUp = boundsUp.GetComponent<BoxCollider>();
         colliderUp.size = new Vector3(Mathf.Abs(gridBoundsMax.x - gridBoundsMin.x) + 2f, 10f, 2f);
         
-        boundsDown.transform.position = new Vector3(Mathf.Abs(gridBoundsMin.x - gridBoundsMax.x) * 0.5f, 0f, gridBoundsMin.z);
+        boundsDown.transform.position = new Vector3(Mathf.Abs(gridBoundsMin.x - gridBoundsMax.x) * 0.5f, 0f, gridBoundsMin.z - 1f);
         BoxCollider colliderDown = boundsDown.GetComponent<BoxCollider>();
-        colliderDown.size = new Vector3(Mathf.Abs(gridBoundsMax.x - gridBoundsMin.x) + 2f, 10f, 2f);
+        colliderDown.size = new Vector3(Mathf.Abs(gridBoundsMax.x - gridBoundsMin.x) + 5f, 10f, 2f);
 
     }
 
