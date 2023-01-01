@@ -92,6 +92,9 @@ public class HexagonTile : MonoBehaviour
 
     public void MarkAsShopTile(BombShop shopInstance)
     {
+
+        GridFactory.GetInstance().playerZoneCount++; //dirty but works for now.
+        this.InitPlateAsPlayerZone();
         this.bombShopInstance = shopInstance;
 
         //get feedback child GO
@@ -126,6 +129,8 @@ public class HexagonTile : MonoBehaviour
 
     public void MarkAsUpgradeShopTile(UpgradeShop upgradeShopInstance)
     {
+        // GridFactory.GetInstance().playerZoneCount++; //dirty but works for now.
+        // this.InitPlateAsPlayerZone();
         this.upgradeShopInstance = upgradeShopInstance;
         this.GetComponent<MeshRenderer>().material = upgradeShopPlateLook;
         this.resource.gameObject.SetActive(false);

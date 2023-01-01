@@ -231,8 +231,8 @@ public class GridFactory : MonoBehaviour
             HexagonTile tileObj = col.GetComponent<HexagonTile>();
             if (tileObj != null)
             {
-                this.playerZoneCount++;
                 tileObj.InitPlateAsPlayerZone();
+                this.playerZoneCount++;
             }
         }
     }
