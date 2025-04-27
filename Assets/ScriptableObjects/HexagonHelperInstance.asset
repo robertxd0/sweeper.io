@@ -15,6 +15,9 @@ MonoBehaviour:
   hexagonPrefab: {fileID: 2155471122417398603, guid: 38da7ab7e0302b345afa75a0cfb0cce2, type: 3}
   resourcePrefabs:
   - {fileID: 1949591130436844729, guid: edf48b47d5f6f7246b61d7797ce1017e, type: 3}
+  - {fileID: 1949591130436844729, guid: 095e22e88f9b49a489cce2b980f239f8, type: 3}
+  - {fileID: 1949591130436844729, guid: 4c22f8efb87824b43a66ffba3c7f2f1b, type: 3}
+  - {fileID: 1949591130436844729, guid: 33b464058d1696d4392e97e3d05eb8f6, type: 3}
   goldResourcePrefabs:
   - {fileID: 4228999727535932131, guid: e58d3ee538663b1459efd547dac6c25a, type: 3}
   goldResourceQuota: 0.015

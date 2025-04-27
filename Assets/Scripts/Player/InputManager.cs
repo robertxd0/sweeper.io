@@ -13,7 +13,6 @@ public class InputManager : MonoBehaviour
       Vector2 initialTouchPos;
       Vector3 direction;
 
-
       private void Start()
       {
             controller = GetComponent<CharacterController>();

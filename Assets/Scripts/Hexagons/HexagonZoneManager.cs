@@ -36,16 +36,17 @@ public class HexagonZoneManager : MonoBehaviour
 
     public void AddHexagonsForPlayer(HexagonTile[] hexagonPlates, int playerId)
     {
-        if (!zones.ContainsKey(playerId))
+        if (!zones.ContainsKey(0))
         {
             List<HexagonTile> hexagons = new List<HexagonTile>();
             hexagons.AddRange(hexagonPlates);
-            zones.Add(playerId, hexagons);
+            zones.Add(0, hexagons);
         }
         else
-            zones[playerId].AddRange(hexagonPlates);
+            zones[0].AddRange(hexagonPlates);
 
-        float playerZonesQuota = (float)(zones[playerId].Count - factory.playerZoneCount) / ((factory.width * factory.depth) - factory.playerZoneCount);
+        float playerZonesQuota = (float)(zones[0].Count - factory.playerZoneCount) / ((factory.width * factory.depth) - factory.playerZoneCount);
+
         this.gameManager.UpdateLevelProgress(playerZonesQuota); ;
 
         if (hexagonZoneCoroutine != null)
@@ -53,7 +54,7 @@ public class HexagonZoneManager : MonoBehaviour
             StopCoroutine(hexagonZoneCoroutine);
         }
 
-        hexagonZoneCoroutine = StartCoroutine(MarkHexagonZoneWithDelay(playerId));
+        hexagonZoneCoroutine = StartCoroutine(MarkHexagonZoneWithDelay(0));
     }
 
     public void UpdateZone(int playerId)

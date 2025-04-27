@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Reflection;
+using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -12,59 +15,75 @@ public class GameManager : MonoBehaviour
 
     [Range(0f, 1f)]
     [SerializeField] private float resourceIncrementRate = 0.1f;
-    
+
     [Range(0f, 1f)]
     [SerializeField] private float goldResourceIncrementRate = 0.1f;
-    
+
+    [SerializeField] private AnimationCurve bombStrengthSkillProgress;
+
+    [SerializeField] private ParticleSystem[] winParticleRewards;
+
+    //this is a temporary solution, prototyping only
+    [SerializeField] private Vector2Int[] levelGridMapping;
+
     private FeedbackAnimationManager feedbackAnimationManager;
 
     private PlayerProperties currentProps;
 
-    private float decimalResourceCount = 0f;
-    private float decimalGoldResourceCount = 0f;
 
-    private void Awake() {
+    private void Awake()
+    {
         instance = this;
     }
 
-    private void OnDisable() {
+    private void OnDisable()
+    {
         instance = null;
     }
 
     void Start()
     {
-        //load from playerprefs
-        currentProps = new PlayerProperties();
-        currentProps.gameLevel = 1;
-        currentProps.bombCount = 5;
-        currentProps.resourceCount = 0;
-        currentProps.goldResourceCount = 0;
-        currentProps.bombStrengthLevel = 2;
-        currentProps.bombCountLevel = 2;
-        currentProps.resourceCountLevel = 1;
+        if (SaveHelper.ProgressAvailableInStorage())
+        {
+            currentProps = SaveHelper.LoadFromFile();
+        }
+        else
+        {
+            currentProps = new PlayerProperties();
+            currentProps.gameLevel = 1;
+            currentProps.bombCount = 5;
+            currentProps.resourceCount = 0;
+            currentProps.goldResourceCount = 0;
+            currentProps.bombStrengthLevel = 1;
+            currentProps.bombCountLevel = 1;
+            currentProps.resourceCountLevel = 1;
+
+            SaveHelper.SaveToFile(currentProps);
+        }
+
+        Vector2Int levelGridDetails = levelGridMapping[currentProps.gameLevel - 1]; //ikr 😁
+
+        GridFactory.GetInstance().InitGrid(levelGridDetails);
 
         inGameUI.HandlePlayerPropertyChange(currentProps);
 
         feedbackAnimationManager = FeedbackAnimationManager.instance;
 
-        decimalResourceCount = currentProps.resourceCount;
-
-        decimalGoldResourceCount = currentProps.goldResourceCount;
-
-        Bomb.bombStrength = currentProps.GetBombStrength();
+        Bomb.bombStrength = currentProps.GetBombStrength(bombStrengthSkillProgress);
     }
+
     //
     // Summary:
     //     Returns true if player has successfully bought. If player has not enough resources, it returns false.
     public bool IncrementBombs(int bombResourceCount)
     {
-        if(currentProps.bombCount >= currentProps.GetMaxBombCount())
+        if (currentProps.bombCount >= currentProps.GetMaxBombCount())
         {
             inGameUI.EnableBombCntLimitFeedback();
             return false;
         }
 
-        if(bombResourceCount > currentProps.resourceCount)
+        if (bombResourceCount > currentProps.resourceCount)
         {
             inGameUI.EnableNotEnoughResFeedback();
             return false;
@@ -73,8 +92,6 @@ public class GameManager : MonoBehaviour
         currentProps.resourceCount -= bombResourceCount;
         currentProps.bombCount++;
 
-        decimalResourceCount = (float)currentProps.resourceCount;
-        
         feedbackAnimationManager.ExecFeedbackFX(FXFeedbackTypes.BOMB_PURCHASE_SUCCESSFUL, playerInputManager.transform);
         inGameUI.HandlePlayerPropertyChange(currentProps);
         return true;
@@ -82,22 +99,19 @@ public class GameManager : MonoBehaviour
 
     public void IncrementResources()
     {
-        if(currentProps.resourceCount >= currentProps.GetMaxResourceCount())
+        if (currentProps.resourceCount >= currentProps.GetMaxResourceCount())
         {
             return;
         }
-        decimalResourceCount += resourceIncrementRate;
 
-        currentProps.resourceCount = (int)decimalResourceCount;
+        currentProps.resourceCount += resourceIncrementRate;
         inGameUI.HandlePlayerPropertyChange(currentProps);
     }
 
 
     public void IncrementGoldResources()
     {
-        decimalGoldResourceCount += goldResourceIncrementRate;
-
-        currentProps.goldResourceCount = (int)decimalGoldResourceCount;
+        currentProps.goldResourceCount += goldResourceIncrementRate;
         inGameUI.HandlePlayerPropertyChange(currentProps);
     }
 
@@ -109,12 +123,19 @@ public class GameManager : MonoBehaviour
 
     public bool HasBombs()
     {
-        return currentProps.bombCount > 0;
+        bool hasBombs = currentProps.bombCount > 0;
+
+        if (!hasBombs)
+        {
+            inGameUI.EnableNotEnoughBombsFeedback();
+        }
+
+        return hasBombs;
     }
 
     public bool ResourceLimitReached()
     {
-        if(currentProps.resourceCount >= currentProps.GetMaxResourceCount())
+        if (currentProps.resourceCount >= currentProps.GetMaxResourceCount())
         {
             inGameUI.EnableResLimitFeedback();
 
@@ -140,16 +161,82 @@ public class GameManager : MonoBehaviour
     public void UpdateLevelProgress(float percentQuota)
     {
         this.inGameUI.SetLevelProgressBarQuota(percentQuota);
+
+        if (percentQuota > 0.99f)
+        {
+            this.LevelCompleted();
+        }
     }
+
+    public void Upgrade(PlayerProperties newProps)
+    {
+        this.currentProps = newProps;
+    }
+
+    public PlayerProperties GetPlayerProperties()
+    {
+        return this.currentProps;
+    }
+
+    private void LevelCompleted()
+    {
+        this.playerInputManager.DisableInput();
+        
+        if(this.currentProps.gameLevel < this.levelGridMapping.Length)
+            this.currentProps.gameLevel++;
+        
+        //else load random level? or generate something idk.
+
+        SaveHelper.SaveToFile(this.currentProps);
+
+        StartCoroutine(LevelWonCoroutine());
+    }
+
+    private void LostGame()
+    {
+        this.currentProps.bombCount = 0;
+        this.currentProps.resourceCount = 0;
+        //also reset gold count?
+
+        SaveHelper.SaveToFile(this.currentProps);
+    }
+
+    public void LoadNextLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private IEnumerator LevelWonCoroutine()
+    {
+
+        var end = Time.time + 1.2f;
+        while (Time.time < end)
+        {
+            yield return null;
+        }
+        foreach (ParticleSystem ps in winParticleRewards)
+        {
+            ps.Play();
+        }
+        end = Time.time + 2.5f;
+        while (Time.time < end)
+        {
+            yield return null;
+        }
+        this.inGameUI.ShowNextLevelDialog();
+    }
+
 }
 
 
+
+[System.Serializable]
 public struct PlayerProperties
 {
     public int gameLevel;
     public int bombCount;
-    public int resourceCount;
-    public int goldResourceCount;
+    public float resourceCount;
+    public float goldResourceCount;
 
     public int bombStrengthLevel;
 
@@ -169,15 +256,15 @@ public struct PlayerProperties
         return (int)((float)bombCountLevel * 0.05f * 100f);
     }
 
-    public float GetBombStrength()
+    public float GetBombStrength(AnimationCurve predefinedStrengthProgress)
     {
-          return ((float)bombStrengthLevel * 1.5f);
+        return predefinedStrengthProgress.Evaluate((float)bombStrengthLevel - 1 / predefinedStrengthProgress[predefinedStrengthProgress.length - 1].time);
     }
 
 
     public int GetBombStrengthUpgradeUprice()
     {
-        return bombStrengthLevel * 50;
+        return bombStrengthLevel * 250;
     }
 
     public int GetBombCountUpgradeUprice()

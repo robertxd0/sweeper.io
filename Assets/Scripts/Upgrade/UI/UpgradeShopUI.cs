@@ -4,26 +4,30 @@ using TMPro;
 
 public class UpgradeShopUI : MonoBehaviour
 {
-    [SerializeField] private TMP_Text bombRadiusLevelInfo; 
-    [SerializeField] private TMP_Text bombCountLevelInfo; 
-    [SerializeField] private TMP_Text resourceCountInfo; 
-    
+    [SerializeField] private TMP_Text bombRadiusLevelInfo;
+    [SerializeField] private TMP_Text bombCountLevelInfo;
+    [SerializeField] private TMP_Text resourceCountInfo;
+
     [SerializeField] private TMP_Text bombRadiusUpgradePrice;
     [SerializeField] private TMP_Text bombCountUpgradePrice;
     [SerializeField] private TMP_Text resourceCountUpgradePrice;
- 
+
     private PlayerProperties playerProperties;
 
-    public void InitShop(PlayerProperties props)
+    private InGameUI inGameUI;
+    public void InitShop(PlayerProperties props, InGameUI inGameUIInstance)
     {
         this.playerProperties = props;
         this.LoadPropertyValuesIntoShop();
         this.gameObject.SetActive(true);
+
+        this.inGameUI = inGameUIInstance;
     }
 
 
     public void LoadPropertyValuesIntoShop()
     {
+        this.playerProperties = GameManager.instance.GetPlayerProperties();
         bombRadiusLevelInfo.text = bombRadiusLevelInfo.text.Replace("%n", playerProperties.bombStrengthLevel.ToString());
 
         bombCountLevelInfo.text = bombCountLevelInfo.text.Replace("%n", playerProperties.bombCountLevel.ToString());
@@ -59,5 +63,61 @@ public class UpgradeShopUI : MonoBehaviour
         this.gameObject.SetActive(false);
         this.ClearShopPropertyValues();
         GameManager.instance.OnShopClosed();
+    }
+
+    public void UpgradeBombRadius()
+    {
+        var playerProps = GameManager.instance.GetPlayerProperties();
+        if (this.playerProperties.goldResourceCount >= this.playerProperties.GetBombStrengthUpgradeUprice())
+        {
+            playerProps.goldResourceCount -= this.playerProperties.GetBombStrengthUpgradeUprice();
+            playerProps.bombStrengthLevel += 1;
+            GameManager.instance.Upgrade(playerProps);
+            this.ClearShopPropertyValues();
+            this.LoadPropertyValuesIntoShop();
+            this.inGameUI.HandlePlayerPropertyChange(playerProps);
+
+            return;
+        }
+
+        //player's got no money lol. add ingameui feedback animation here
+    }
+
+    public void UpgradeBombCount()
+    {
+        var playerProps = GameManager.instance.GetPlayerProperties();
+        if (this.playerProperties.goldResourceCount >= this.playerProperties.GetBombCountUpgradeUprice())
+        {
+            playerProps.goldResourceCount -= this.playerProperties.GetBombCountUpgradeUprice();
+            playerProps.bombCountLevel += 1;
+            GameManager.instance.Upgrade(playerProps);
+            this.ClearShopPropertyValues();
+            this.LoadPropertyValuesIntoShop();
+            this.inGameUI.HandlePlayerPropertyChange(playerProps);
+
+            return;
+        }
+
+        //player's got no money lol. add ingameui feedback animation here
+    }
+
+    public void UpgradeResourceCount()
+    {
+        var playerProps = GameManager.instance.GetPlayerProperties();
+        if (this.playerProperties.goldResourceCount >= this.playerProperties.GetResourceCountUpgradeUprice())
+        {
+            playerProps.goldResourceCount -= this.playerProperties.GetResourceCountUpgradeUprice();
+            playerProps.resourceCountLevel += 1;
+            GameManager.instance.Upgrade(playerProps);
+            this.ClearShopPropertyValues();
+            this.LoadPropertyValuesIntoShop();
+            this.inGameUI.HandlePlayerPropertyChange(playerProps);
+
+            return;
+        }
+
+        //player's got no money lol. add ingameui feedback animation here
+
+
     }
 }

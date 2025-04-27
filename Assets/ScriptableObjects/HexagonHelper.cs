@@ -63,7 +63,7 @@ public class HexagonHelper : ScriptableObject
 
         if(goldResourceIndices.Contains(this.totalHexagonCount))
         {
-            resourceInstance = Instantiate(goldResourcePrefabs[Random.Range(0, resourcePrefabs.Length-1)]);
+            resourceInstance = Instantiate(goldResourcePrefabs[Random.Range(0, goldResourcePrefabs.Length-1)]);
         }else
         {
             resourceInstance = Instantiate(resourcePrefabs[Random.Range(0, resourcePrefabs.Length-1)]);

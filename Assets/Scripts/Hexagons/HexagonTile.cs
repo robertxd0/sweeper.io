@@ -65,6 +65,13 @@ public class HexagonTile : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other) {
+        if(borderPlate && other.tag == Constants.TAG_PLAYER)
+        {
+            manager.HasBombs(); //(not ok) used for ui animation
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (isShopTile)
@@ -85,6 +92,9 @@ public class HexagonTile : MonoBehaviour
 
     public void MarkAsShopTile(BombShop shopInstance)
     {
+
+        GridFactory.GetInstance().playerZoneCount++; //dirty but works for now.
+        this.InitPlateAsPlayerZone();
         this.bombShopInstance = shopInstance;
 
         //get feedback child GO
@@ -106,7 +116,9 @@ public class HexagonTile : MonoBehaviour
             }
         }
 
+        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
         this.GetComponent<MeshRenderer>().material = bombShopPlateLook;
+        this.resource.gameObject.SetActive(false);
         this.isShopTile = true;
     }
 
@@ -117,8 +129,12 @@ public class HexagonTile : MonoBehaviour
 
     public void MarkAsUpgradeShopTile(UpgradeShop upgradeShopInstance)
     {
+        // GridFactory.GetInstance().playerZoneCount++; //dirty but works for now.
+        // this.InitPlateAsPlayerZone();
         this.upgradeShopInstance = upgradeShopInstance;
         this.GetComponent<MeshRenderer>().material = upgradeShopPlateLook;
+        this.resource.gameObject.SetActive(false);
+        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES);
 
         this.isUpgradeShopTile = true;
     }
@@ -135,10 +151,13 @@ public class HexagonTile : MonoBehaviour
 
     public void SetResource(Resource resourcePrefab)
     {
-        resourcePrefab.gameObject.transform.SetParent(transform);
-        resourcePrefab.gameObject.transform.localPosition = new Vector3(0f, 0f, 1.5f);
+        if(!(this.isUpgradeShopTile && this.isShopTile))
+        {
+            resourcePrefab.gameObject.transform.SetParent(transform);
+            resourcePrefab.gameObject.transform.localPosition = new Vector3(0f, 0f, 1.5f);
 
-        this.resource = resourcePrefab;
+            this.resource = resourcePrefab;
+        }
     }
 
     private void UnsetResource()
@@ -154,15 +173,18 @@ public class HexagonTile : MonoBehaviour
 
     public void SetBorderPlate()
     {
-        this.borderPlate = true;
-        this.bomb = null;
-        this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES); //it still is a triggered plate
-        this.GetComponent<MeshRenderer>().material = borderPlateLook;
-
-        if (this.resource != null && this.resource.gameObject.activeInHierarchy)
+        if(!(this.isShopTile || this.isUpgradeShopTile))
         {
-            resource.Explode();
-            UnsetResource();
+            this.borderPlate = true;
+            this.bomb = null;
+            this.gameObject.layer = LayerMask.NameToLayer(Constants.LAYER_TRIGGERED_PLATES); //it still is a triggered plate
+            this.GetComponent<MeshRenderer>().material = borderPlateLook;
+
+            if (this.resource != null && this.resource.gameObject.activeInHierarchy)
+            {
+                resource.Explode();
+                UnsetResource();
+            }
         }
     }
 
@@ -192,7 +214,18 @@ public class HexagonTile : MonoBehaviour
         this.GetComponent<MeshRenderer>().material = this.standardPlateLook;
 
         int layer = 1 << LayerMask.NameToLayer(Constants.LAYER_UNTRIGGERED_PLATES);
-        this.adjacentPlatesCol = Physics.OverlapSphere(transform.position, Bomb.bombStrength, layer);
+        float radius = Bomb.bombStrength;
+
+        this.adjacentPlatesCol = Physics.OverlapSphere(transform.position, radius, layer);
+
+        //failsafe
+        int tryCount = 0;
+        while(adjacentPlatesCol.Length < 1 && tryCount < 15)
+        {
+            radius += 0.5f;
+            tryCount++;
+            this.adjacentPlatesCol = Physics.OverlapSphere(transform.position, radius, layer);
+        }
 
         this.adjacentPlatesObj = new HexagonTile[adjacentPlatesCol.Length];
 
